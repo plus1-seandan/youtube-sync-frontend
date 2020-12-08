@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useImperativeHandle } from "react";
-import queryString from "query-string";
+// import queryString from "query-string";
 import io from "socket.io-client";
 import VideoPlayer from "../VideoPlayer/VideoPlayer.js";
 import Chat from "../Chat/Chat.js";
-import SearchBar from "../Searchbar";
+import SearchBar from "../Searchbar/Searchbar";
 import youtube from "../../apis/youtube";
-//import vimeo from "../../apis/vimeo";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
+import RoomMembers from "./RoomMembers/RoomMembers";
 
 let socket;
 const ENDPOINT = "localhost:5000";
@@ -23,21 +23,23 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Room = ({ location }) => {
-  const [name, setName] = useState("");
-  const [room, setRoom] = useState("");
+const Room = (props) => {
+  const [name, setName] = useState(props.location.state.email);
+  const [room, setRoom] = useState(props.location.state.room);
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
   const [videos, setVideos] = useState([]);
   const [selectedVideo, setSelectedVideo] = useState();
   const [videoPlaying, setVideoPlaying] = useState(false);
+  const [seek, setSeek] = useState(0);
 
   useEffect(() => {
-    const { name, room } = queryString.parse(location.search);
-    console.log(name, room);
+    // console.log(queryString.parse(location.search));
+    // const { name, room } = queryString.parse(location.search);
     socket = io(ENDPOINT);
-    setName(name);
-    setRoom(room);
+    setName(props.location.state.email);
+    setRoom(props.location.state.room);
+    console.log(name, room);
 
     socket.emit("join", { name, room });
 
@@ -46,13 +48,14 @@ const Room = ({ location }) => {
       socket.off();
       console.log("user has left");
     };
-  }, [ENDPOINT, location.search]);
+  }, [name, room]);
 
   useEffect(() => {
     console.log("message recieved to change video");
     socket.on("changeVideo", (video) => {
       setSelectedVideo(video);
     });
+
     //const url = props.url;
     socket.on("pauseVideo", (data) => {
       console.log("recieved broacast to pause video");
@@ -61,6 +64,10 @@ const Room = ({ location }) => {
     socket.on("playVideo", (data) => {
       console.log("recieved broacast to play video");
       setVideoPlaying(true);
+    });
+    socket.on("seekVideo", (data) => {
+      console.log("recieved broacast to seek video");
+      setSeek(data);
     });
   }, [selectedVideo]);
 
@@ -85,7 +92,6 @@ const Room = ({ location }) => {
       socket.emit("sendMessage", message, () => setMessage(""));
     }
   };
-  //console.log(message, messages);
 
   const handleSubmit = async (termFromSearchBar) => {
     console.log(termFromSearchBar);
@@ -111,6 +117,9 @@ const Room = ({ location }) => {
     <div className={classes.root}>
       <Grid container spacing={3}>
         <Grid item xs={12}>
+          <RoomMembers roomId={props.location.state.roomId} />
+        </Grid>
+        <Grid item xs={12}>
           <SearchBar handleFormSubmit={handleSubmit} />
         </Grid>
         <Grid item xs={6}>
@@ -120,6 +129,7 @@ const Room = ({ location }) => {
             selectedVideo={selectedVideo}
             videos={videos}
             videoPlaying={videoPlaying}
+            seek={seek}
             handleVideoSelect={handleVideoSelect}
             handleSubmit={handleSubmit}
           />

@@ -25,18 +25,6 @@ const Chat = ({ name, room, message, messages, setMessage, sendMessage }) => {
       </CardContent>
     </Card>
   );
-  // return(
-  //     <div className="outercontainer">
-  //         <div className="container">
-  //             <InfoBar room = {room} />
-  //             <Messages messages={messages} name={name}/>
-  //             <Input message={message} setMessage={setMessage} sendMessage={sendMessage}/>
-  //             {/* <input value={message}
-  //             onChange={(event) => setMessage(event.target.value)}
-  //             onKeyPress={event => event.key ==="Enter" ? sendMessage(event) : null}/> */}
-  //         </div>
-  //     </div>
-  // )
 };
 
 export default Chat;

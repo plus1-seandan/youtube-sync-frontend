@@ -1,13 +1,15 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import "./Join.css";
+// import "./Join.css";
 import Grid from "@material-ui/core/Grid";
 import Card from "@material-ui/core/Card";
 import TextField from "@material-ui/core/TextField";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
+import Checkbox from "@material-ui/core/Checkbox";
 import axios from "axios";
+import { v4 as uuidv4 } from "uuid";
+
 import { makeStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router-dom";
 
@@ -22,22 +24,35 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Join = ({ user }) => {
+const CreateRoom = (state) => {
+  const [isPrivate, setIsPrivate] = useState(false);
+
   const classes = useStyles();
   const history = useHistory();
 
+  console.log(state.user.id);
+
   const handleSubmit = (event) => {
     event.preventDefault();
+    const newRoom = {
+      id: uuidv4(),
+      name: event.target.elements.roomName.value,
+      isPrivate: event.target.elements.isPrivate.checked,
+    };
+    if (newRoom.isPrivate) {
+      newRoom.password = event.target.elements.password.value;
+    } else {
+      newRoom.password = "";
+    }
+
     axios
-      .get("http://localhost:5001/search-room", {
-        params: {
-          name: event.target.elements.roomName.value,
-        },
-      })
+      .post("http://localhost:5001/create-room", newRoom)
       .then(function (response) {
-        const room = response.data;
-        const userId = user.id;
-        const roomId = room.id;
+        console.log("room created successfully");
+        const roomId = newRoom.id;
+        const userId = state.user.id;
+        console.log(roomId, userId);
+
         axios
           .post("http://localhost:5001/add-member", {
             userId,
@@ -45,11 +60,11 @@ const Join = ({ user }) => {
           })
           .then(function (response) {
             history.push({
-              pathname: `/room?name=${user.id}&room=${room.name}`,
+              pathname: `/room?name=${state.user.id}&room=${newRoom.name}`,
               state: {
-                email: user.email,
-                room: room.name,
-                roomId: roomId,
+                email: state.user.email,
+                room: newRoom.name,
+                roomId: newRoom.id,
               },
             });
           })
@@ -61,44 +76,47 @@ const Join = ({ user }) => {
         console.log(error);
       });
   };
-
   return (
     <div className={classes.root}>
       <Grid container alignItems="center" justify="center">
         <Card>
-          <CardHeader title="Join" titleTypographyProps={{ align: "center" }} />
+          <CardHeader
+            title="Create New Room"
+            titleTypographyProps={{ align: "center" }}
+          />
           <CardContent>
-            <form
-              className={classes.root}
-              noValidate
-              autoComplete="off"
-              onSubmit={handleSubmit}
-            >
-              <TextField
-                id="form-name"
-                label="Name"
-                name="user"
-                fullWidth={true}
-                defaultValue={user.email}
-                inputProps={{
-                  readOnly: true,
-                }}
-                // onChange={(event) => setName(event.target.value)}
-              />
+            <form className={classes.form} noValidate onSubmit={handleSubmit}>
               <TextField
                 id="form-room"
                 label="Room Name"
                 name="roomName"
                 fullWidth={true}
-                // onChange={(event) => setRoom(event.target.value)}
               />
+              <Checkbox
+                name="isPrivate"
+                checked={isPrivate}
+                color="primary"
+                inputProps={{ "aria-label": "secondary checkbox" }}
+                onClick={() => {
+                  setIsPrivate(!isPrivate);
+                }}
+              />
+              {isPrivate ? (
+                <TextField
+                  id="form-room"
+                  label="Password"
+                  name="password"
+                  defaultValue=""
+                  fullWidth={true}
+                />
+              ) : null}
               <Button
                 type="submit"
                 variant="contained"
                 color="primary"
                 className={classes.submit}
               >
-                Join Room
+                Create Room
               </Button>
             </form>
           </CardContent>
@@ -108,4 +126,4 @@ const Join = ({ user }) => {
   );
 };
 
-export default Join;
+export default CreateRoom;
