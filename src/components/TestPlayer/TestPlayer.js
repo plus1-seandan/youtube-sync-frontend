@@ -73,24 +73,12 @@ class TestPlayer extends Component {
     this.setState({ url: null, playing: false });
   };
 
-  handleToggleLight = () => {
-    this.setState({ light: !this.state.light });
-  };
-
   handleToggleLoop = () => {
     this.setState({ loop: !this.state.loop });
   };
 
   handleVolumeChange = (e) => {
     this.setState({ volume: parseFloat(e.target.value) });
-  };
-
-  handleToggleMuted = () => {
-    this.setState({ muted: !this.state.muted });
-  };
-
-  handleSetPlaybackRate = (e) => {
-    this.setState({ playbackRate: parseFloat(e.target.value) });
   };
 
   handleTogglePIP = () => {
@@ -247,20 +235,6 @@ class TestPlayer extends Component {
                 </td>
               </tr>
               <tr>
-                <th>Speed</th>
-                <td>
-                  <button onClick={this.handleSetPlaybackRate} value={1}>
-                    1x
-                  </button>
-                  <button onClick={this.handleSetPlaybackRate} value={1.5}>
-                    1.5x
-                  </button>
-                  <button onClick={this.handleSetPlaybackRate} value={2}>
-                    2x
-                  </button>
-                </td>
-              </tr>
-              <tr>
                 <th>Seek</th>
                 <td>
                   <input
@@ -289,59 +263,6 @@ class TestPlayer extends Component {
                 </td>
               </tr>
               <tr>
-                <th>
-                  <label htmlFor="controls">Controls</label>
-                </th>
-                <td>
-                  <input
-                    id="controls"
-                    type="checkbox"
-                    checked={controls}
-                    onChange={this.handleToggleControls}
-                  />
-                  <em>&nbsp; Requires player reload</em>
-                </td>
-              </tr>
-              <tr>
-                <th>
-                  <label htmlFor="muted">Muted</label>
-                </th>
-                <td>
-                  <input
-                    id="muted"
-                    type="checkbox"
-                    checked={muted}
-                    onChange={this.handleToggleMuted}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <th>
-                  <label htmlFor="loop">Loop</label>
-                </th>
-                <td>
-                  <input
-                    id="loop"
-                    type="checkbox"
-                    checked={loop}
-                    onChange={this.handleToggleLoop}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <th>
-                  <label htmlFor="light">Light mode</label>
-                </th>
-                <td>
-                  <input
-                    id="light"
-                    type="checkbox"
-                    checked={light}
-                    onChange={this.handleToggleLight}
-                  />
-                </td>
-              </tr>
-              <tr>
                 <th>Played</th>
                 <td>
                   <progress max={1} value={played} />
@@ -357,202 +278,7 @@ class TestPlayer extends Component {
           </table>
         </section>
         <section className="section">
-          <table>
-            <tbody>
-              <tr>
-                <th>YouTube</th>
-                <td>
-                  {this.renderLoadButton(
-                    "https://www.youtube.com/watch?v=oUFJJNQGwhk",
-                    "Test A"
-                  )}
-                  {this.renderLoadButton(
-                    "https://www.youtube.com/watch?v=jNgP6d9HraI",
-                    "Test B"
-                  )}
-                  {this.renderLoadButton(
-                    "https://www.youtube.com/playlist?list=PLogRWNZ498ETeQNYrOlqikEML3bKJcdcx",
-                    "Playlist"
-                  )}
-                </td>
-              </tr>
-              <tr>
-                <th>SoundCloud</th>
-                <td>
-                  {this.renderLoadButton(
-                    "https://soundcloud.com/miami-nights-1984/accelerated",
-                    "Test A"
-                  )}
-                  {this.renderLoadButton(
-                    "https://soundcloud.com/tycho/tycho-awake",
-                    "Test B"
-                  )}
-                </td>
-              </tr>
-              <tr>
-                <th>Facebook</th>
-                <td>
-                  {this.renderLoadButton(
-                    "https://www.facebook.com/facebook/videos/10153231379946729/",
-                    "Test A"
-                  )}
-                  {this.renderLoadButton(
-                    "https://www.facebook.com/FacebookDevelopers/videos/10152454700553553/",
-                    "Test B"
-                  )}
-                </td>
-              </tr>
-              <tr>
-                <th>Vimeo</th>
-                <td>
-                  {this.renderLoadButton(
-                    "https://vimeo.com/90509568",
-                    "Test A"
-                  )}
-                  {this.renderLoadButton(
-                    "https://vimeo.com/169599296",
-                    "Test B"
-                  )}
-                </td>
-              </tr>
-              <tr>
-                <th>Twitch</th>
-                <td>
-                  {this.renderLoadButton(
-                    "https://www.twitch.tv/videos/106400740",
-                    "Test A"
-                  )}
-                  {this.renderLoadButton(
-                    "https://www.twitch.tv/videos/12783852",
-                    "Test B"
-                  )}
-                  {this.renderLoadButton(
-                    "https://www.twitch.tv/kronovi",
-                    "Test C"
-                  )}
-                </td>
-              </tr>
-              <tr>
-                <th>Streamable</th>
-                <td>
-                  {this.renderLoadButton(
-                    "https://streamable.com/moo",
-                    "Test A"
-                  )}
-                  {this.renderLoadButton(
-                    "https://streamable.com/ifjh",
-                    "Test B"
-                  )}
-                </td>
-              </tr>
-              <tr>
-                <th>Wistia</th>
-                <td>
-                  {this.renderLoadButton(
-                    "https://home.wistia.com/medias/e4a27b971d",
-                    "Test A"
-                  )}
-                  {this.renderLoadButton(
-                    "https://home.wistia.com/medias/29b0fbf547",
-                    "Test B"
-                  )}
-                  {this.renderLoadButton(
-                    "https://home.wistia.com/medias/bq6epni33s",
-                    "Test C"
-                  )}
-                </td>
-              </tr>
-              <tr>
-                <th>DailyMotion</th>
-                <td>
-                  {this.renderLoadButton(
-                    "https://www.dailymotion.com/video/x5e9eog",
-                    "Test A"
-                  )}
-                  {this.renderLoadButton(
-                    "https://www.dailymotion.com/video/x61xx3z",
-                    "Test B"
-                  )}
-                </td>
-              </tr>
-              <tr>
-                <th>Mixcloud</th>
-                <td>
-                  {this.renderLoadButton(
-                    "https://www.mixcloud.com/mixcloud/meet-the-curators/",
-                    "Test A"
-                  )}
-                  {this.renderLoadButton(
-                    "https://www.mixcloud.com/mixcloud/mixcloud-curates-4-mary-anne-hobbs-in-conversation-with-dan-deacon/",
-                    "Test B"
-                  )}
-                </td>
-              </tr>
-              <tr>
-                <th>Vidyard</th>
-                <td>
-                  {this.renderLoadButton(
-                    "https://video.vidyard.com/watch/YBvcF2BEfvKdowmfrRwk57",
-                    "Test A"
-                  )}
-                  {this.renderLoadButton(
-                    "https://video.vidyard.com/watch/BLXgYCDGfwU62vdMWybNVJ",
-                    "Test B"
-                  )}
-                </td>
-              </tr>
-              <tr>
-                <th>Files</th>
-                <td>
-                  {this.renderLoadButton(
-                    "https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/360/Big_Buck_Bunny_360_10s_1MB.mp4",
-                    "mp4"
-                  )}
-                  {this.renderLoadButton(
-                    "https://test-videos.co.uk/vids/bigbuckbunny/webm/vp8/360/Big_Buck_Bunny_360_10s_1MB.webm",
-                    "webm"
-                  )}
-                  {this.renderLoadButton(
-                    "https://filesamples.com/samples/video/ogv/sample_640x360.ogv",
-                    "ogv"
-                  )}
-                  {this.renderLoadButton(
-                    "https://storage.googleapis.com/media-session/elephants-dream/the-wires.mp3",
-                    "mp3"
-                  )}
-                  <br />
-                  {this.renderLoadButton(
-                    "https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8",
-                    "HLS (m3u8)"
-                  )}
-                  {this.renderLoadButton(
-                    "http://dash.edgesuite.net/envivio/EnvivioDash3/manifest.mpd",
-                    "DASH (mpd)"
-                  )}
-                </td>
-              </tr>
-              <tr>
-                <th>Custom URL</th>
-                <td>
-                  <input
-                    ref={(input) => {
-                      this.urlInput = input;
-                    }}
-                    type="text"
-                    placeholder="Enter URL"
-                  />
-                  <button
-                    onClick={() => this.setState({ url: this.urlInput.value })}
-                  >
-                    Load
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-
           <h2>State</h2>
-
           <table>
             <tbody>
               <tr>
@@ -598,12 +324,6 @@ class TestPlayer extends Component {
             </tbody>
           </table>
         </section>
-        <footer className="footer">
-          {SEPARATOR}
-          <a href="https://github.com/CookPete/react-player">GitHub</a>
-          {SEPARATOR}
-          <a href="https://www.npmjs.com/package/react-player">npm</a>
-        </footer>
       </div>
     );
   }

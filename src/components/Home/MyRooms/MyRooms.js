@@ -4,6 +4,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import { useHistory } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { getMyRooms } from "../../../actions";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -18,23 +20,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const MyRooms = ({ user }) => {
+const MyRooms = () => {
   const classes = useStyles();
   const history = useHistory();
-
-  const [myRooms, setMyRooms] = useState([]);
-  console.log(user.id);
+  const currUser = useSelector((state) => state.currUserInfo);
+  const myRooms = useSelector((state) => state.myRooms);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     axios
       .get("http://localhost:5001/search-myRooms", {
         params: {
-          userId: user.id,
+          userId: currUser.id,
         },
       })
       .then(function (response) {
-        console.log(response.data);
-        setMyRooms(response.data);
+        dispatch(getMyRooms(response.data));
       })
       .catch(function (error) {
         console.log(error);
@@ -42,17 +43,18 @@ const MyRooms = ({ user }) => {
     return () => {
       // Anything in here is fired on component unmount.
     };
-  }, [user]);
+  });
 
   const handleClick = (room) => {
     function inner(e) {
-      const { id, name } = room;
+      // const { name } = room;
+      console.log(currUser.email, room.name);
       history.push({
-        pathname: `/room?name=${user.id}&room=${name}`,
+        pathname: `/room`,
         state: {
-          email: user.email,
-          room: name,
-          roomId: id,
+          email: currUser.email,
+          room: room.name,
+          roomId: room.id,
         },
       });
     }
@@ -70,7 +72,7 @@ const MyRooms = ({ user }) => {
                 <ListItem
                   className={classes.item}
                   button
-                  key={room}
+                  key={room.id}
                   value="testRoomId"
                   onClick={handleClick(room)}
                 >

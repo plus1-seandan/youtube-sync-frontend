@@ -16,31 +16,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const RoomMembers = (prop) => {
-  console.log(prop.roomId);
   const classes = useStyles();
-  const [roomMembers, setRoomMembers] = useState([]);
+  const roomMembers = prop.roomMembers;
 
-  useEffect(() => {
-    axios
-      .get("http://localhost:5001/search-roomMembers", {
-        params: {
-          roomId: prop.roomId,
-        },
-      })
-      .then(function (response) {
-        console.log("response received");
-        console.log(response.data);
-        setRoomMembers(response.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  }, [prop.roomId]);
   return (
     <div>
       <List>
         {roomMembers.map((member) => (
-          <ListItem className={classes.item} button key={member}>
+          <ListItem className={classes.item} button key={member.id}>
             {member.email}
           </ListItem>
         ))}

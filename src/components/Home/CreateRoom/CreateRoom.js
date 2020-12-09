@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 // import "./Join.css";
 import Grid from "@material-ui/core/Grid";
 import Card from "@material-ui/core/Card";
@@ -9,6 +9,8 @@ import Button from "@material-ui/core/Button";
 import Checkbox from "@material-ui/core/Checkbox";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
+import { useSelector, useDispatch } from "react-redux";
+import { addMyRoom } from "../../../actions";
 
 import { makeStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router-dom";
@@ -24,13 +26,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const CreateRoom = (state) => {
+const CreateRoom = () => {
+  const dispatch = useDispatch();
+  const currUser = useSelector((state) => state.currUserInfo);
+  console.log(currUser);
   const [isPrivate, setIsPrivate] = useState(false);
 
   const classes = useStyles();
   const history = useHistory();
-
-  console.log(state.user.id);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -50,8 +53,7 @@ const CreateRoom = (state) => {
       .then(function (response) {
         console.log("room created successfully");
         const roomId = newRoom.id;
-        const userId = state.user.id;
-        console.log(roomId, userId);
+        const userId = currUser.id;
 
         axios
           .post("http://localhost:5001/add-member", {
@@ -59,10 +61,11 @@ const CreateRoom = (state) => {
             roomId,
           })
           .then(function (response) {
+            dispatch(addMyRoom(newRoom));
             history.push({
-              pathname: `/room?name=${state.user.id}&room=${newRoom.name}`,
+              pathname: `/room`,
               state: {
-                email: state.user.email,
+                email: currUser.email,
                 room: newRoom.name,
                 roomId: newRoom.id,
               },

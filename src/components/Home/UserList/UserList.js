@@ -7,6 +7,7 @@ import IconButton from "@material-ui/core/IconButton";
 import ListItemText from "@material-ui/core/ListItemText";
 import AddIcon from "@material-ui/icons/Add";
 import axios from "axios";
+import { useSelector, useDispatch } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -21,11 +22,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const UserList = ({ currUser, users }) => {
+const UserList = ({ users }) => {
   const classes = useStyles();
+  const currUser = useSelector((state) => state.currUserInfo);
 
   const handleClick = (user) => {
-    //add friends
     const currUserId = currUser.id;
     const userId = user.id;
     console.log(currUserId, userId);
@@ -45,7 +46,7 @@ const UserList = ({ currUser, users }) => {
     <div>
       <List>
         {users.map((user) => (
-          <ListItem className={classes.item} button key={user}>
+          <ListItem className={classes.item} button key={user.id}>
             <ListItemText id={user.id} primary={user.email} />
             <ListItemSecondaryAction>
               <IconButton

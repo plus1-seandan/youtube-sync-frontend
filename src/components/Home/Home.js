@@ -4,16 +4,19 @@ import CreateRoom from "./CreateRoom/CreateRoom";
 import Join from "../Join/Join";
 import MyRooms from "./MyRooms/MyRooms";
 import MyFriends from "./MyFriends/MyFriends";
+import { useSelector } from "react-redux";
 
-const Home = (props) => {
+const Home = () => {
+  const currUser = useSelector((state) => state.currUserInfo);
+  // console.log(currUser);
   return (
     <div>
-      <div>Hi {props.location.state.email}</div>
-      <SearchUsers user={props.location.state} />
-      <MyRooms user={props.location.state} />
-      <MyFriends user={props.location.state} />
-      <CreateRoom user={props.location.state} />
-      <Join user={props.location.state} />
+      <div>Hi {currUser.firstName}</div>
+      <SearchUsers />
+      <MyRooms />
+      <MyFriends />
+      <CreateRoom />
+      {/* <Join user={props.location.state} />  */}
     </div>
   );
 };

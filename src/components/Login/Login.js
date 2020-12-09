@@ -13,6 +13,8 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import axios from "axios";
+import { setAccountInfo } from "../../actions";
+import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 
 function Copyright() {
@@ -61,8 +63,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const some_var = "iris";
 const Login = () => {
+  const dispatch = useDispatch();
   const history = useHistory();
   const classes = useStyles();
   const handleSubmit = (event) => {
@@ -78,14 +80,11 @@ const Login = () => {
       .then(function (response) {
         console.log(response.data);
         if (response.data !== "fail") {
+          //set currUser state
+          dispatch(setAccountInfo(response.data));
           history.push({
-            pathname: `/home?id=${response.data.id}`,
-            state: {
-              id: response.data.id,
-              firstName: response.data.firstName,
-              lastName: response.data.lastName,
-              email: response.data.email,
-            },
+            pathname: `/home`,
+            // pathname: `/home?id=${response.data.firstName}`,
           });
         } else {
           alert("Wrong Username or Password");

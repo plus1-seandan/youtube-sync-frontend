@@ -8,6 +8,8 @@ import youtube from "../../apis/youtube";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import RoomMembers from "./RoomMembers/RoomMembers";
+import MyFriendsRoom from "./MyFriendsRoom/MyFriendsRoom";
+import axios from "axios";
 
 let socket;
 const ENDPOINT = "localhost:5000";
@@ -26,12 +28,31 @@ const useStyles = makeStyles((theme) => ({
 const Room = (props) => {
   const [name, setName] = useState(props.location.state.email);
   const [room, setRoom] = useState(props.location.state.room);
+  const [roomId, setRoomId] = useState(props.location.state.roomId);
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
   const [videos, setVideos] = useState([]);
   const [selectedVideo, setSelectedVideo] = useState();
   const [videoPlaying, setVideoPlaying] = useState(false);
   const [seek, setSeek] = useState(0);
+  const [roomMembers, setRoomMembers] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:5001/search-roomMembers", {
+        params: {
+          roomId: roomId,
+        },
+      })
+      .then(function (response) {
+        console.log("response received");
+        console.log(response.data);
+        setRoomMembers(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, []);
 
   useEffect(() => {
     // console.log(queryString.parse(location.search));
@@ -39,8 +60,6 @@ const Room = (props) => {
     socket = io(ENDPOINT);
     setName(props.location.state.email);
     setRoom(props.location.state.room);
-    console.log(name, room);
-
     socket.emit("join", { name, room });
 
     return () => {
@@ -111,13 +130,25 @@ const Room = (props) => {
     socket.emit("change", { video: video, room: room });
   };
 
+  const handleCallback = async (friend) => {
+    console.log(friend);
+    const userId = friend.id;
+    const response = await axios.post("http://localhost:5001/add-member", {
+      userId,
+      roomId,
+    });
+    const newArr = roomMembers.slice();
+    newArr.push(friend);
+    setRoomMembers(newArr);
+  };
+
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          <RoomMembers roomId={props.location.state.roomId} />
+          <RoomMembers roomMembers={roomMembers} />
         </Grid>
         <Grid item xs={12}>
           <SearchBar handleFormSubmit={handleSubmit} />
@@ -135,6 +166,9 @@ const Room = (props) => {
           />
         </Grid>
         <Grid item xs={6}>
+          <MyFriendsRoom roomId={roomId} parentCallback={handleCallback} />
+        </Grid>
+        {/* <Grid item xs={6}>
           <Chat
             name={name}
             room={room}
@@ -144,7 +178,7 @@ const Room = (props) => {
             setMessage={setMessage}
             setMessages={setMessages}
           />
-        </Grid>
+        </Grid> */}
       </Grid>
     </div>
   );

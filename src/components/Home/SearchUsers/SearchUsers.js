@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SearchUsers = ({ user }) => {
+const SearchUsers = () => {
   const classes = useStyles();
   const [query, setQuery] = useState("");
   const [searchedUsers, setSearchedUsers] = useState([]);
@@ -55,7 +55,7 @@ const SearchUsers = ({ user }) => {
         />
       </form>
       {searchedUsers && !!searchedUsers.length > 0 && (
-        <UserList currUser={user} users={searchedUsers} />
+        <UserList users={searchedUsers} />
       )}
     </div>
   );
