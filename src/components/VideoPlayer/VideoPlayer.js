@@ -26,6 +26,7 @@ const useStyles = makeStyles((theme) => ({
 const VideoPlayer = ({
   name,
   room,
+  roomId,
   videos,
   selectedVideo,
   handleVideoSelect,
@@ -43,6 +44,7 @@ const VideoPlayer = ({
             video={selectedVideo}
             videoPlaying={videoPlaying}
             room={room}
+            roomId={roomId}
             seek={seek}
           />
         </Grid>

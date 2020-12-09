@@ -27,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Room = (props) => {
   const [name, setName] = useState(props.location.state.email);
+  const [userId, setUserId] = useState(props.location.state.userId);
   const [room, setRoom] = useState(props.location.state.room);
   const [roomId, setRoomId] = useState(props.location.state.roomId);
   const [messages, setMessages] = useState([]);
@@ -58,16 +59,15 @@ const Room = (props) => {
     // console.log(queryString.parse(location.search));
     // const { name, room } = queryString.parse(location.search);
     socket = io(ENDPOINT);
-    setName(props.location.state.email);
-    setRoom(props.location.state.room);
-    socket.emit("join", { name, room });
-
+    setUserId(props.location.state.email);
+    setRoomId(props.location.state.roomId);
+    socket.emit("join", { userId, roomId });
     return () => {
       socket.emit("disconnnect");
       socket.off();
       console.log("user has left");
     };
-  }, [name, room]);
+  }, [name, roomId]);
 
   useEffect(() => {
     console.log("message recieved to change video");
@@ -90,27 +90,27 @@ const Room = (props) => {
     });
   }, [selectedVideo]);
 
-  useEffect(() => {
-    socket.on("message", (message) => {
-      setMessages([...messages, message]);
-    });
+  // useEffect(() => {
+  //   socket.on("message", (message) => {
+  //     setMessages([...messages, message]);
+  //   });
 
-    socket.on("welcomeMessage", (message) => {
-      setMessages([...messages, message]);
-    });
+  //   socket.on("welcomeMessage", (message) => {
+  //     setMessages([...messages, message]);
+  //   });
 
-    socket.on("joinMessage", (message) => {
-      setMessages([...messages, message]);
-    });
-  }, [messages]);
+  //   socket.on("joinMessage", (message) => {
+  //     setMessages([...messages, message]);
+  //   });
+  // }, [messages]);
 
-  const sendMessage = (event) => {
-    event.preventDefault(); //prevent whole page refresh on change
+  // const sendMessage = (event) => {
+  //   event.preventDefault(); //prevent whole page refresh on change
 
-    if (message) {
-      socket.emit("sendMessage", message, () => setMessage(""));
-    }
-  };
+  //   if (message) {
+  //     socket.emit("sendMessage", message, () => setMessage(""));
+  //   }
+  // };
 
   const handleSubmit = async (termFromSearchBar) => {
     console.log(termFromSearchBar);
@@ -127,7 +127,7 @@ const Room = (props) => {
     console.log("triggered video select");
     console.log(video);
     setSelectedVideo(video);
-    socket.emit("change", { video: video, room: room });
+    socket.emit("change", { video: video, roomId: roomId });
   };
 
   const handleCallback = async (friend) => {
@@ -157,6 +157,7 @@ const Room = (props) => {
           <VideoPlayer
             name={name}
             room={room}
+            roomId={roomId}
             selectedVideo={selectedVideo}
             videos={videos}
             videoPlaying={videoPlaying}

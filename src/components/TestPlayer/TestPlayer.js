@@ -23,6 +23,7 @@ class TestPlayer extends Component {
     super(props);
     this.state = {
       room: props.room,
+      roomId: props.roomId,
       url: props.url,
       pip: false,
       playing: props.videoPlaying,
@@ -88,7 +89,7 @@ class TestPlayer extends Component {
   handlePlay = () => {
     console.log("onPlay");
     this.setState({ playing: true });
-    socket.emit("play", this.state.room);
+    socket.emit("play", this.state.roomId);
   };
 
   handleEnablePIP = () => {
@@ -104,7 +105,7 @@ class TestPlayer extends Component {
   handlePause = () => {
     console.log("onPause");
     this.setState({ playing: false });
-    socket.emit("pause", this.state.room);
+    socket.emit("pause", this.state.roomId);
   };
 
   handleSeekMouseDown = (e) => {
@@ -124,7 +125,7 @@ class TestPlayer extends Component {
     this.setState({ seeking: false });
     this.player.seekTo(parseFloat(e.target.value));
     socket.emit("seek", {
-      room: this.state.room,
+      roomId: this.state.roomId,
       seek: e.target.value,
     });
   };

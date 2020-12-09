@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const VideoDetail = ({ video, room, videoPlaying, seek }) => {
+const VideoDetail = ({ video, room, roomId, videoPlaying, seek }) => {
   const videoId = video ? video.id.videoId : "";
   console.log(videoPlaying);
   const classes = useStyles();
@@ -30,6 +30,7 @@ const VideoDetail = ({ video, room, videoPlaying, seek }) => {
             url={`https://www.youtube.com/embed/${videoId}`}
             videoPlaying={videoPlaying}
             room={room}
+            roomId={roomId}
             seek={seek}
           />
           {/* <Grid item xs={12}>

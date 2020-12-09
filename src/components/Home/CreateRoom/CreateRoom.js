@@ -66,6 +66,7 @@ const CreateRoom = () => {
               pathname: `/room`,
               state: {
                 email: currUser.email,
+                userId: currUser.id,
                 room: newRoom.name,
                 roomId: newRoom.id,
               },
