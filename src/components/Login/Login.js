@@ -69,7 +69,6 @@ const Login = () => {
   const classes = useStyles();
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(event.target.elements.email.value);
     axios
       .get("http://localhost:5001/sign-in", {
         params: {
@@ -78,7 +77,6 @@ const Login = () => {
         },
       })
       .then(function (response) {
-        console.log(response.data);
         if (response.data !== "fail") {
           //set currUser state
           dispatch(setAccountInfo(response.data));

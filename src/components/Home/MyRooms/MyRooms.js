@@ -48,11 +48,11 @@ const MyRooms = () => {
   const handleClick = (room) => {
     function inner(e) {
       // const { name } = room;
-      console.log(currUser.email, room.name);
       history.push({
         pathname: `/room`,
         state: {
           email: currUser.email,
+          userId: currUser.id,
           room: room.name,
           roomId: room.id,
         },

@@ -29,7 +29,6 @@ const UserList = ({ users }) => {
   const handleClick = (user) => {
     const currUserId = currUser.id;
     const userId = user.id;
-    console.log(currUserId, userId);
     axios
       .post("http://localhost:5001/add-friend", { currUserId, userId })
       .then(function (response) {

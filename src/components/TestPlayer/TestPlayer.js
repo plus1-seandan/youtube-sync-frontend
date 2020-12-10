@@ -17,8 +17,6 @@ const socket = io(ENDPOINT);
 
 class TestPlayer extends Component {
   constructor(props) {
-    console.log("video played or paused");
-    console.log(props.videoPlaying);
 
     super(props);
     this.state = {
@@ -41,7 +39,6 @@ class TestPlayer extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log("video change triggered");
     if (prevProps.url !== this.props.url) {
       this.setState({
         url: this.props.url,

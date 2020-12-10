@@ -3,7 +3,6 @@ import TextField from "@material-ui/core/TextField";
 
 class Searchbar extends React.Component {
   handleChange = (event) => {
-    console.log({ event });
     this.setState(
       {
         term: event.target.value,
@@ -11,7 +10,6 @@ class Searchbar extends React.Component {
       () => {
         if (event.charCode === 13) {
           event.preventDefault();
-          console.log({ term: this.state.term });
           this.props.handleFormSubmit(this.state.term);
         }
       }

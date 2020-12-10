@@ -51,7 +51,6 @@ const CreateRoom = () => {
     axios
       .post("http://localhost:5001/create-room", newRoom)
       .then(function (response) {
-        console.log("room created successfully");
         const roomId = newRoom.id;
         const userId = currUser.id;
 

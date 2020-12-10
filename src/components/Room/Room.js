@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useImperativeHandle } from "react";
+import React, { useState, useEffect, useRef } from "react";
 // import queryString from "query-string";
 import io from "socket.io-client";
 import VideoPlayer from "../VideoPlayer/VideoPlayer.js";
@@ -10,9 +10,11 @@ import Grid from "@material-ui/core/Grid";
 import RoomMembers from "./RoomMembers/RoomMembers";
 import MyFriendsRoom from "./MyFriendsRoom/MyFriendsRoom";
 import axios from "axios";
+import userEvent from "@testing-library/user-event";
+import VideoChat from "../VideoChat/VideoChat";
 
-let socket;
-const ENDPOINT = "localhost:5000";
+// let socket;
+// const ENDPOINT = "localhost:5000";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -37,6 +39,7 @@ const Room = (props) => {
   const [videoPlaying, setVideoPlaying] = useState(false);
   const [seek, setSeek] = useState(0);
   const [roomMembers, setRoomMembers] = useState([]);
+  const peersRef = useRef([]);
 
   useEffect(() => {
     axios
@@ -46,8 +49,6 @@ const Room = (props) => {
         },
       })
       .then(function (response) {
-        console.log("response received");
-        console.log(response.data);
         setRoomMembers(response.data);
       })
       .catch(function (error) {
@@ -56,39 +57,55 @@ const Room = (props) => {
   }, []);
 
   useEffect(() => {
-    // console.log(queryString.parse(location.search));
-    // const { name, room } = queryString.parse(location.search);
-    socket = io(ENDPOINT);
-    setUserId(props.location.state.email);
-    setRoomId(props.location.state.roomId);
-    socket.emit("join", { userId, roomId });
-    return () => {
-      socket.emit("disconnnect");
-      socket.off();
-      console.log("user has left");
-    };
-  }, [name, roomId]);
+    // socket = io(ENDPOINT);
+    // //i join the room
+    // socket.emit("join-room");
+    // socket.on("all users", (users) => {
+    //   console.log(users);
+    //   //get back all the users in the room already besides yourself.
+    //   //right now you don't have any peers. so lets set it up
+    //   // const peers = [];
+    //   users.forEach((userId) => {
+    //     const peer = createPeer(userId, socket.id, "hello"); //sends other user id, my own user id, and some data
+    //     peersRef.current.push({
+    //       peerId: userId, //not ours
+    //       peer,
+    //     });
+    //   });
+    // });
+    // socket.on("user joined", (payload) => {
+    //   console.log(payload.message);
+    //   const peer = addPeer(
+    //     payload.signal,
+    //     payload.callerId,
+    //     "thanks for welcoming me"
+    //   );
+    //   peersRef.current.push({
+    //     peerId: payload.callerId, //not ours
+    //     peer,
+    //   });
+    // });
+  }, []);
 
-  useEffect(() => {
-    console.log("message recieved to change video");
-    socket.on("changeVideo", (video) => {
-      setSelectedVideo(video);
-    });
+  // useEffect(() => {
+  //   console.log("message recieved to change video");
+  //   socket.on("changeVideo", (video) => {
+  //     setSelectedVideo(video);
+  //   });
 
-    //const url = props.url;
-    socket.on("pauseVideo", (data) => {
-      console.log("recieved broacast to pause video");
-      setVideoPlaying(false);
-    });
-    socket.on("playVideo", (data) => {
-      console.log("recieved broacast to play video");
-      setVideoPlaying(true);
-    });
-    socket.on("seekVideo", (data) => {
-      console.log("recieved broacast to seek video");
-      setSeek(data);
-    });
-  }, [selectedVideo]);
+  //   socket.on("pauseVideo", (data) => {
+  //     console.log("recieved broacast to pause video");
+  //     setVideoPlaying(false);
+  //   });
+  //   socket.on("playVideo", (data) => {
+  //     console.log("recieved broacast to play video");
+  //     setVideoPlaying(true);
+  //   });
+  //   socket.on("seekVideo", (data) => {
+  //     console.log("recieved broacast to seek video");
+  //     setSeek(data);
+  //   });
+  // }, [selectedVideo]);
 
   // useEffect(() => {
   //   socket.on("message", (message) => {
@@ -113,25 +130,20 @@ const Room = (props) => {
   // };
 
   const handleSubmit = async (termFromSearchBar) => {
-    console.log(termFromSearchBar);
     const response = await youtube.get("/search", {
       params: {
         q: termFromSearchBar,
       },
     });
     setVideos(response.data.items);
-    console.log(videos);
   };
 
   const handleVideoSelect = (video) => {
-    console.log("triggered video select");
-    console.log(video);
     setSelectedVideo(video);
-    socket.emit("change", { video: video, roomId: roomId });
+    // socket.emit("change", { video: video, roomId: roomId });
   };
 
   const handleCallback = async (friend) => {
-    console.log(friend);
     const userId = friend.id;
     const response = await axios.post("http://localhost:5001/add-member", {
       userId,
@@ -153,7 +165,10 @@ const Room = (props) => {
         <Grid item xs={12}>
           <SearchBar handleFormSubmit={handleSubmit} />
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={12}>
+          <VideoChat roomId={roomId} />
+        </Grid>
+        {/* <Grid item xs={6}>
           <VideoPlayer
             name={name}
             room={room}
@@ -165,7 +180,7 @@ const Room = (props) => {
             handleVideoSelect={handleVideoSelect}
             handleSubmit={handleSubmit}
           />
-        </Grid>
+        </Grid> */}
         <Grid item xs={6}>
           <MyFriendsRoom roomId={roomId} parentCallback={handleCallback} />
         </Grid>

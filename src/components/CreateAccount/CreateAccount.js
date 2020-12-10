@@ -63,7 +63,6 @@ export default function CreateAccount() {
     axios
       .post("http://localhost:5001/create-account", newUser)
       .then(function (response) {
-        console.log(response);
         alert("New User Created. Please sign in");
       })
       .catch(function (error) {

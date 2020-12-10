@@ -8,7 +8,6 @@ import { useSelector } from "react-redux";
 
 const Home = () => {
   const currUser = useSelector((state) => state.currUserInfo);
-  // console.log(currUser);
   return (
     <div>
       <div>Hi {currUser.firstName}</div>
