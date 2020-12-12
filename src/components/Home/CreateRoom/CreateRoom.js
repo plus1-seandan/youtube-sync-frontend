@@ -11,9 +11,10 @@ import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 import { useSelector, useDispatch } from "react-redux";
 import { addMyRoom } from "../../../actions";
-
+import Alert from "@material-ui/lab/Alert";
 import { makeStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router-dom";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -29,9 +30,8 @@ const useStyles = makeStyles((theme) => ({
 const CreateRoom = () => {
   const dispatch = useDispatch();
   const currUser = useSelector((state) => state.currUserInfo);
-  console.log(currUser);
   const [isPrivate, setIsPrivate] = useState(false);
-
+  const [error, setError] = useState("");
   const classes = useStyles();
   const history = useHistory();
 
@@ -42,12 +42,18 @@ const CreateRoom = () => {
       name: event.target.elements.roomName.value,
       isPrivate: event.target.elements.isPrivate.checked,
     };
+    if (newRoom.name === "") {
+      setError("Room Name required");
+    }
     if (newRoom.isPrivate) {
       newRoom.password = event.target.elements.password.value;
+      if (newRoom.password === "") {
+        setError("Password required for private rooms");
+        return;
+      }
     } else {
       newRoom.password = "";
     }
-
     axios
       .post("http://localhost:5001/create-room", newRoom)
       .then(function (response) {
@@ -95,14 +101,19 @@ const CreateRoom = () => {
                 name="roomName"
                 fullWidth={true}
               />
-              <Checkbox
-                name="isPrivate"
-                checked={isPrivate}
-                color="primary"
-                inputProps={{ "aria-label": "secondary checkbox" }}
-                onClick={() => {
-                  setIsPrivate(!isPrivate);
-                }}
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    name="isPrivate"
+                    checked={isPrivate}
+                    color="primary"
+                    inputProps={{ "aria-label": "secondary checkbox" }}
+                    onClick={() => {
+                      setIsPrivate(!isPrivate);
+                    }}
+                  />
+                }
+                label="Private"
               />
               {isPrivate ? (
                 <TextField
@@ -113,6 +124,7 @@ const CreateRoom = () => {
                   fullWidth={true}
                 />
               ) : null}
+              {error ? <Alert severity="error">{error}</Alert> : null}
               <Button
                 type="submit"
                 variant="contained"

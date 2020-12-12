@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 // import queryString from "query-string";
 import io from "socket.io-client";
-import VideoPlayer from "../VideoPlayer/VideoPlayer.js";
+import VideoPlayer from "./VideoPlayer/VideoPlayer.js";
 import Chat from "../Chat/Chat.js";
 import SearchBar from "../Searchbar/Searchbar";
 import youtube from "../../apis/youtube";
@@ -10,8 +10,9 @@ import Grid from "@material-ui/core/Grid";
 import RoomMembers from "./RoomMembers/RoomMembers";
 import MyFriendsRoom from "./MyFriendsRoom/MyFriendsRoom";
 import axios from "axios";
-import userEvent from "@testing-library/user-event";
-import VideoChat from "../VideoChat/VideoChat";
+import Header from "../Header/Header";
+import { useSelector, useDispatch, connect } from "react-redux";
+import { getRoomMembers } from "../../actions";
 
 // let socket;
 // const ENDPOINT = "localhost:5000";
@@ -27,29 +28,37 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const mapStateToProps = (state, ownProps) => {
+  console.log(ownProps);
+  return {
+    thisRoom: state["myRooms"][ownProps.location.state.roomId],
+  };
+};
+
 const Room = (props) => {
-  const [name, setName] = useState(props.location.state.email);
-  const [userId, setUserId] = useState(props.location.state.userId);
-  const [room, setRoom] = useState(props.location.state.room);
-  const [roomId, setRoomId] = useState(props.location.state.roomId);
-  const [messages, setMessages] = useState([]);
-  const [message, setMessage] = useState("");
+  // const [messages, setMessages] = useState([]);
+  // const [message, setMessage] = useState("");
   const [videos, setVideos] = useState([]);
   const [selectedVideo, setSelectedVideo] = useState();
   const [videoPlaying, setVideoPlaying] = useState(false);
   const [seek, setSeek] = useState(0);
-  const [roomMembers, setRoomMembers] = useState([]);
-  const peersRef = useRef([]);
+  // const [roomMembers, setRoomMembers] = useState([]);
+  const dispatch = useDispatch();
+  const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
     axios
       .get("http://localhost:5001/search-roomMembers", {
         params: {
-          roomId: roomId,
+          roomId: props.thisRoom.room.id,
         },
       })
       .then(function (response) {
-        setRoomMembers(response.data);
+        const roomId = props.thisRoom.room.id;
+        const roomMembersArr = response.data;
+        console.log(roomMembersArr);
+        dispatch(getRoomMembers(roomId, roomMembersArr));
+        setLoading(false);
       })
       .catch(function (error) {
         console.log(error);
@@ -143,36 +152,39 @@ const Room = (props) => {
     // socket.emit("change", { video: video, roomId: roomId });
   };
 
-  const handleCallback = async (friend) => {
-    const userId = friend.id;
-    const response = await axios.post("http://localhost:5001/add-member", {
-      userId,
-      roomId,
-    });
-    const newArr = roomMembers.slice();
-    newArr.push(friend);
-    setRoomMembers(newArr);
-  };
+  // const handleCallback = async (friend) => {
+  //   const userId = friend.id;
+  //   const roomId = props.thisRoom.room.id;
+  //   const response = await axios.post("http://localhost:5001/add-member", {
+  //     userId,
+  //     roomId,
+  //   });
+  //   // const newArr = roomMembers.slice();
+  //   // newArr.push(friend);
+  //   // setRoomMembers(newArr);
+  // };
 
   const classes = useStyles();
 
+  if (isLoading) {
+    return null;
+  }
   return (
     <div className={classes.root}>
+      <Header />
+      <h1>Welcome to room {props.thisRoom.room.name}</h1>
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          <RoomMembers roomMembers={roomMembers} />
+          <RoomMembers roomId={props.thisRoom.room.id} />
         </Grid>
         <Grid item xs={12}>
           <SearchBar handleFormSubmit={handleSubmit} />
         </Grid>
-        <Grid item xs={12}>
-          <VideoChat roomId={roomId} />
-        </Grid>
-        {/* <Grid item xs={6}>
+        <Grid item xs={6}>
           <VideoPlayer
-            name={name}
-            room={room}
-            roomId={roomId}
+            name={props.thisRoom.room.name}
+            room={props.thisRoom.room}
+            roomId={props.thisRoom.room.id}
             selectedVideo={selectedVideo}
             videos={videos}
             videoPlaying={videoPlaying}
@@ -180,9 +192,12 @@ const Room = (props) => {
             handleVideoSelect={handleVideoSelect}
             handleSubmit={handleSubmit}
           />
-        </Grid> */}
+        </Grid>
         <Grid item xs={6}>
-          <MyFriendsRoom roomId={roomId} parentCallback={handleCallback} />
+          <MyFriendsRoom
+            roomId={props.thisRoom.room.id}
+            // parentCallback={handleCallback}
+          />
         </Grid>
         {/* <Grid item xs={6}>
           <Chat
@@ -200,4 +215,4 @@ const Room = (props) => {
   );
 };
 
-export default Room;
+export default connect(mapStateToProps)(Room);

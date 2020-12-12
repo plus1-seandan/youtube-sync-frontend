@@ -3,7 +3,7 @@ import io from "socket.io-client";
 import SearchBar from "../../Searchbar/Searchbar";
 import youtube from "../../../apis/youtube";
 import VideoList from "../../VideoList/VideoList";
-import VideoDetail from "../../VideoDetail/VideoDetail";
+import VideoDetail from "./VideoDetail/VideoDetail";
 import queryString from "query-string";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";

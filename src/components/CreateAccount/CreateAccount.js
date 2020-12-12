@@ -1,10 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 //import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
+import Alert from "@material-ui/lab/Alert";
 import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 //import Box from "@material-ui/core/Box";
@@ -14,6 +13,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
+import { useHistory } from "react-router-dom";
 
 // function Copyright() {
 //   return (
@@ -50,6 +50,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function CreateAccount() {
   const classes = useStyles();
+  const history = useHistory();
+  const [error, setError] = useState("");
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -60,15 +62,37 @@ export default function CreateAccount() {
     newUser.email = event.target.elements.email.value;
     newUser.password = event.target.elements.password.value;
 
+    //validate
+    if (
+      !newUser.firstName ||
+      !newUser.lastName ||
+      !newUser.email ||
+      !newUser.password
+    ) {
+      setError("Invalid Input. Please fill in all required info.");
+      return;
+    }
+    var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+
+    if (reg.test(newUser.email) == false) {
+      setError("Not a valid email address");
+      return;
+    }
     axios
       .post("http://localhost:5001/create-account", newUser)
       .then(function (response) {
+        if (response.data === "ERROR") {
+          setError("An account with this email already exists.");
+          return;
+        }
         alert("New User Created. Please sign in");
+        history.push(`/`);
       })
       .catch(function (error) {
         console.log(error);
       });
   };
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -127,13 +151,8 @@ export default function CreateAccount() {
                 autoComplete="current-password"
               />
             </Grid>
-            <Grid item xs={12}>
-              <FormControlLabel
-                control={<Checkbox value="allowExtraEmails" color="primary" />}
-                label="I want to receive inspiration, marketing promotions and updates via email."
-              />
-            </Grid>
           </Grid>
+          {error ? <Alert severity="error">{error}</Alert> : null}
           <Button
             type="submit"
             fullWidth

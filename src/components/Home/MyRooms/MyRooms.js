@@ -6,6 +6,10 @@ import ListItem from "@material-ui/core/ListItem";
 import { useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { getMyRooms } from "../../../actions";
+import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
+import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
+import IconButton from "@material-ui/core/IconButton";
+import ListItemText from "@material-ui/core/ListItemText";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,6 +30,7 @@ const MyRooms = () => {
   const currUser = useSelector((state) => state.currUserInfo);
   const myRooms = useSelector((state) => state.myRooms);
   const dispatch = useDispatch();
+  const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
     axios
@@ -36,6 +41,7 @@ const MyRooms = () => {
       })
       .then(function (response) {
         dispatch(getMyRooms(response.data));
+        setLoading(false);
       })
       .catch(function (error) {
         console.log(error);
@@ -43,17 +49,13 @@ const MyRooms = () => {
     return () => {
       // Anything in here is fired on component unmount.
     };
-  });
+  }, []);
 
   const handleClick = (room) => {
     function inner(e) {
-      // const { name } = room;
       history.push({
         pathname: `/room`,
         state: {
-          email: currUser.email,
-          userId: currUser.id,
-          room: room.name,
           roomId: room.id,
         },
       });
@@ -61,22 +63,30 @@ const MyRooms = () => {
     return inner;
   };
 
+  if (isLoading) {
+    return null;
+  }
   return (
     <div>
       <h1>My Rooms</h1>
       <div>
-        {myRooms && !!myRooms.length > 0 && (
+        {myRooms && (
           <div>
             <List>
-              {myRooms.map((room) => (
-                <ListItem
-                  className={classes.item}
-                  button
-                  key={room.id}
-                  value="testRoomId"
-                  onClick={handleClick(room)}
-                >
-                  {room.name}
+              {Object.entries(myRooms).map(([key, value], i) => (
+                <ListItem className={classes.item} button key={key}>
+                  <ListItemText
+                    id={value.room.id}
+                    primary={<p>{value.room.name}</p>}
+                  />
+                  <ListItemSecondaryAction>
+                    <IconButton
+                      aria-label="myRoom"
+                      onClick={handleClick(value.room)}
+                    >
+                      <ArrowForwardIcon />
+                    </IconButton>
+                  </ListItemSecondaryAction>
                 </ListItem>
               ))}
             </List>
