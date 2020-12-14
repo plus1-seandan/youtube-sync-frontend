@@ -11,6 +11,7 @@ import { useHistory } from "react-router-dom";
 import { clearState } from "../../actions";
 import { useDispatch } from "react-redux";
 import HomeIcon from "@material-ui/icons/Home";
+import PeopleIcon from "@material-ui/icons/People";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -59,7 +60,7 @@ export default function ButtonAppBar() {
             color="inherit"
             aria-label="menu"
           >
-            <SearchIcon
+            <PeopleIcon
               onClick={() => {
                 history.push(`/search`);
               }}

@@ -1,18 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import axios from "axios";
 import UserList from "../../Search/UserList/UserList";
-import { useSelector } from "react-redux";
-import { setSearchedUsers } from "../../../actions";
-import { updateSearchedUsers } from "../../../actions";
-import { useDispatch } from "react-redux";
+import {
+  setSearchedUsers,
+  updateSearchedUsers,
+  clearSearch,
+  addFriend,
+} from "../../../actions";
+import Typography from "@material-ui/core/Typography";
+import { useSelector, useDispatch } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     "& > *": {
       margin: theme.spacing(1),
-      width: "25ch",
+      width: "50ch",
     },
   },
 }));
@@ -25,6 +29,11 @@ const SearchUsers = () => {
   const currUser = useSelector((state) => state.currUserInfo);
   const searchedUsers = useSelector((state) => state.searchedUsers);
 
+  useEffect(() => {
+    console.log("cleared");
+    dispatch(clearSearch());
+  }, []);
+
   const handleChange = (event) => {
     setQuery(event.target.value);
   };
@@ -36,10 +45,11 @@ const SearchUsers = () => {
       .post("http://localhost:5001/add-friend", { currUserId, userId })
       .then(function (response) {
         if (response.data === "success") {
-          alert(user.email + " has been added as a friend");
-          user.isFriend = true;
+          // alert(user.email + " has been added as a friend");
+          // user.isFriend = true;
+          console.log(user);
+          dispatch(addFriend(user));
           dispatch(updateSearchedUsers(user));
-
           // setSearchedUsers({ ...searchedUsers, [user.id]: user });
           // setSearchedUsers({ ...searchedUsers, [user.id]: userId });
         }
@@ -70,6 +80,7 @@ const SearchUsers = () => {
 
   return (
     <div>
+      <Typography>Search Users</Typography>
       <form
         className={classes.root}
         noValidate
@@ -78,7 +89,7 @@ const SearchUsers = () => {
       >
         <TextField
           id="filled-basic"
-          label="Filled"
+          label="... search"
           variant="filled"
           onChange={handleChange}
         />

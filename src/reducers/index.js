@@ -6,6 +6,8 @@ import myFriendsReducer from "./myFriends";
 import currUserReducer from "./currUser";
 import searchedUsersReducer from "./searchedUsers";
 import roomMemberReducer from "./roomMembers";
+import messagesReducer from "./messages";
+import videoReducer from "./videos";
 
 const allReducers = combineReducers({
   currUserInfo: currUserReducer,
@@ -13,6 +15,8 @@ const allReducers = combineReducers({
   myFriends: myFriendsReducer,
   searchedUsers: searchedUsersReducer,
   roomMembers: roomMemberReducer,
+  messages: messagesReducer,
+  videos: videoReducer,
 });
 
 const rootReducer = (state, action) => {
@@ -22,4 +26,5 @@ const rootReducer = (state, action) => {
 
   return allReducers(state, action);
 };
+
 export default rootReducer;

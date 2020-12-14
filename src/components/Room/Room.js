@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
-// import queryString from "query-string";
-import io from "socket.io-client";
 import VideoPlayer from "./VideoPlayer/VideoPlayer.js";
 import Chat from "../Chat/Chat.js";
-import SearchBar from "../Searchbar/Searchbar";
+import SearchBar from "./Searchbar/Searchbar";
 import youtube from "../../apis/youtube";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
@@ -12,10 +10,10 @@ import MyFriendsRoom from "./MyFriendsRoom/MyFriendsRoom";
 import axios from "axios";
 import Header from "../Header/Header";
 import { useSelector, useDispatch, connect } from "react-redux";
-import { getRoomMembers } from "../../actions";
-
-// let socket;
-// const ENDPOINT = "localhost:5000";
+import { getRoomMembers, initializeVideo, setVideo } from "../../actions";
+import { addMessage, startMessage } from "../../actions";
+import socket from "../../socket";
+import Video from "./VideoPlayer/VideoDetail/Video/Video.js";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -29,22 +27,22 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const mapStateToProps = (state, ownProps) => {
-  console.log(ownProps);
+  const roomId = ownProps.location.state.roomId;
   return {
-    thisRoom: state["myRooms"][ownProps.location.state.roomId],
+    thisRoom: state["myRooms"][roomId],
   };
 };
 
 const Room = (props) => {
-  // const [messages, setMessages] = useState([]);
-  // const [message, setMessage] = useState("");
   const [videos, setVideos] = useState([]);
   const [selectedVideo, setSelectedVideo] = useState();
   const [videoPlaying, setVideoPlaying] = useState(false);
   const [seek, setSeek] = useState(0);
-  // const [roomMembers, setRoomMembers] = useState([]);
-  const dispatch = useDispatch();
   const [isLoading, setLoading] = useState(true);
+  const classes = useStyles();
+  const dispatch = useDispatch();
+  const currUser = useSelector((state) => state.currUserInfo);
+  const messages = useSelector((state) => state.messages);
 
   useEffect(() => {
     axios
@@ -63,80 +61,40 @@ const Room = (props) => {
       .catch(function (error) {
         console.log(error);
       });
+    dispatch(startMessage(props.thisRoom.room.id));
+    dispatch(initializeVideo(props.thisRoom.room.id));
   }, []);
 
   useEffect(() => {
-    // socket = io(ENDPOINT);
-    // //i join the room
-    // socket.emit("join-room");
-    // socket.on("all users", (users) => {
-    //   console.log(users);
-    //   //get back all the users in the room already besides yourself.
-    //   //right now you don't have any peers. so lets set it up
-    //   // const peers = [];
-    //   users.forEach((userId) => {
-    //     const peer = createPeer(userId, socket.id, "hello"); //sends other user id, my own user id, and some data
-    //     peersRef.current.push({
-    //       peerId: userId, //not ours
-    //       peer,
-    //     });
-    //   });
-    // });
-    // socket.on("user joined", (payload) => {
-    //   console.log(payload.message);
-    //   const peer = addPeer(
-    //     payload.signal,
-    //     payload.callerId,
-    //     "thanks for welcoming me"
-    //   );
-    //   peersRef.current.push({
-    //     peerId: payload.callerId, //not ours
-    //     peer,
-    //   });
-    // });
+    socket.emit("join-room", { roomId: props.thisRoom.room.id, currUser });
+
+    socket.on("user-joined", (data) => {
+      dispatch(
+        addMessage(
+          props.thisRoom.room.id,
+          { id: "ADMIN", name: "ADMIN" },
+          `${data.firstName} joined the chat`
+        )
+      );
+    });
+
+    socket.on("user-left", (data) => {
+      dispatch(addMessage(props.thisRoom.room.id, currUser, data));
+    });
+
+    socket.on("change-video", (payload) => {
+      dispatch(setVideo(payload.roomId, payload.video));
+    });
+
+    return () => {
+      socket.emit("user-disconnect", {
+        roomId: props.thisRoom.room.id,
+        sender: { id: "ADMIN", name: "ADMIN" },
+      });
+      socket.off();
+      console.log("user has left");
+    };
   }, []);
-
-  // useEffect(() => {
-  //   console.log("message recieved to change video");
-  //   socket.on("changeVideo", (video) => {
-  //     setSelectedVideo(video);
-  //   });
-
-  //   socket.on("pauseVideo", (data) => {
-  //     console.log("recieved broacast to pause video");
-  //     setVideoPlaying(false);
-  //   });
-  //   socket.on("playVideo", (data) => {
-  //     console.log("recieved broacast to play video");
-  //     setVideoPlaying(true);
-  //   });
-  //   socket.on("seekVideo", (data) => {
-  //     console.log("recieved broacast to seek video");
-  //     setSeek(data);
-  //   });
-  // }, [selectedVideo]);
-
-  // useEffect(() => {
-  //   socket.on("message", (message) => {
-  //     setMessages([...messages, message]);
-  //   });
-
-  //   socket.on("welcomeMessage", (message) => {
-  //     setMessages([...messages, message]);
-  //   });
-
-  //   socket.on("joinMessage", (message) => {
-  //     setMessages([...messages, message]);
-  //   });
-  // }, [messages]);
-
-  // const sendMessage = (event) => {
-  //   event.preventDefault(); //prevent whole page refresh on change
-
-  //   if (message) {
-  //     socket.emit("sendMessage", message, () => setMessage(""));
-  //   }
-  // };
 
   const handleSubmit = async (termFromSearchBar) => {
     const response = await youtube.get("/search", {
@@ -148,23 +106,13 @@ const Room = (props) => {
   };
 
   const handleVideoSelect = (video) => {
-    setSelectedVideo(video);
-    // socket.emit("change", { video: video, roomId: roomId });
+    const roomId = props.thisRoom.room.id;
+    dispatch(setVideo(roomId, video));
+    socket.emit("load-video", {
+      roomId: roomId,
+      video: video,
+    });
   };
-
-  // const handleCallback = async (friend) => {
-  //   const userId = friend.id;
-  //   const roomId = props.thisRoom.room.id;
-  //   const response = await axios.post("http://localhost:5001/add-member", {
-  //     userId,
-  //     roomId,
-  //   });
-  //   // const newArr = roomMembers.slice();
-  //   // newArr.push(friend);
-  //   // setRoomMembers(newArr);
-  // };
-
-  const classes = useStyles();
 
   if (isLoading) {
     return null;
@@ -174,10 +122,10 @@ const Room = (props) => {
       <Header />
       <h1>Welcome to room {props.thisRoom.room.name}</h1>
       <Grid container spacing={3}>
-        <Grid item xs={12}>
+        <Grid item xs={3}>
           <RoomMembers roomId={props.thisRoom.room.id} />
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={6}>
           <SearchBar handleFormSubmit={handleSubmit} />
         </Grid>
         <Grid item xs={6}>
@@ -192,8 +140,12 @@ const Room = (props) => {
             handleVideoSelect={handleVideoSelect}
             handleSubmit={handleSubmit}
           />
+          {/* <Video roomId={props.thisRoom.room.id} /> */}
         </Grid>
-        <Grid item xs={6}>
+        <Grid item sm={6}>
+          <Chat roomId={props.thisRoom.room.id} />
+        </Grid>
+        <Grid item xs={3}>
           <MyFriendsRoom
             roomId={props.thisRoom.room.id}
             // parentCallback={handleCallback}

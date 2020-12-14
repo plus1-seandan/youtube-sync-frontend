@@ -46,9 +46,9 @@ const RoomMembers = (prop) => {
               }
             />
             <ListItemSecondaryAction>
-              <IconButton aria-label="myRoom">
+              {/* <IconButton aria-label="myRoom">
                 <ArrowForwardIcon />
-              </IconButton>
+              </IconButton> */}
             </ListItemSecondaryAction>
           </ListItem>
         ))}

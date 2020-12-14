@@ -10,6 +10,8 @@ import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import IconButton from "@material-ui/core/IconButton";
 import ListItemText from "@material-ui/core/ListItemText";
+import TextField from "@material-ui/core/TextField";
+import MyRoom from "./MyRoom/MyRoom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -31,6 +33,7 @@ const MyRooms = () => {
   const myRooms = useSelector((state) => state.myRooms);
   const dispatch = useDispatch();
   const [isLoading, setLoading] = useState(true);
+  const [pwdInputs, setPwdInputs] = useState({});
 
   useEffect(() => {
     axios
@@ -53,14 +56,29 @@ const MyRooms = () => {
 
   const handleClick = (room) => {
     function inner(e) {
-      history.push({
-        pathname: `/room`,
-        state: {
-          roomId: room.id,
-        },
-      });
+      console.log(e);
+      // history.push({
+      //   pathname: `/room`,
+      //   state: {
+      //     roomId: room.id,
+      //   },
+      // });
     }
     return inner;
+  };
+
+  const handleOnChange = (e) => {
+    console.log(e);
+    // setPwdInputs(
+    //   produce((draft) => {
+    //     draft[]
+    //   })
+    // );
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("submit triggered");
+    console.log(e.target.elements);
   };
 
   if (isLoading) {
@@ -74,20 +92,7 @@ const MyRooms = () => {
           <div>
             <List>
               {Object.entries(myRooms).map(([key, value], i) => (
-                <ListItem className={classes.item} button key={key}>
-                  <ListItemText
-                    id={value.room.id}
-                    primary={<p>{value.room.name}</p>}
-                  />
-                  <ListItemSecondaryAction>
-                    <IconButton
-                      aria-label="myRoom"
-                      onClick={handleClick(value.room)}
-                    >
-                      <ArrowForwardIcon />
-                    </IconButton>
-                  </ListItemSecondaryAction>
-                </ListItem>
+                <MyRoom room={value.room} />
               ))}
             </List>
           </div>

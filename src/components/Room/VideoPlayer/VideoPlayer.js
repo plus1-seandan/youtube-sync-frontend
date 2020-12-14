@@ -1,16 +1,12 @@
 import React, { useState, useEffect } from "react";
-import io from "socket.io-client";
-import SearchBar from "../../Searchbar/Searchbar";
+import SearchBar from "../Searchbar/Searchbar";
 import youtube from "../../../apis/youtube";
-import VideoList from "../../VideoList/VideoList";
+import VideoList from "./VideoList/VideoList";
 import VideoDetail from "./VideoDetail/VideoDetail";
 import queryString from "query-string";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
-
-const ENDPOINT = "localhost:5000";
-const socket = io(ENDPOINT);
 
 const useStyles = makeStyles((theme) => ({
   root: {

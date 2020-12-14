@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -9,11 +9,19 @@ import AddIcon from "@material-ui/icons/Add";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import CheckIcon from "@material-ui/icons/Check";
+import Avatar from "@material-ui/core/Avatar";
+import { deepOrange, deepPurple } from "@material-ui/core/colors";
+import { Typography } from "@material-ui/core";
+import { clearSearch } from "../../../actions";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     maxWidth: 752,
+    display: "flex",
+    "& > *": {
+      margin: theme.spacing(1),
+    },
   },
   demo: {
     backgroundColor: theme.palette.background.paper,
@@ -21,56 +29,48 @@ const useStyles = makeStyles((theme) => ({
   title: {
     margin: theme.spacing(4, 0, 2),
   },
+  purple: {
+    color: theme.palette.getContrastText(deepPurple[500]),
+    backgroundColor: deepPurple[500],
+  },
 }));
 
 const UserList = ({ users, handler }) => {
   const classes = useStyles();
   const currUser = useSelector((state) => state.currUserInfo);
 
-  // const handleClick = (user) => {
-  //   const currUserId = currUser.id;
-  //   const userId = user.id;
-  //   axios
-  //     .post("http://localhost:5001/add-friend", { currUserId, userId })
-  //     .then(function (response) {
-  //       if (response.data === "success") {
-  //         alert(user.email + " has been added as a friend");
-  //       }
-  //     })
-  //     .catch(function (error) {
-  //       console.log(error);
-  //     });
-  // };
-
   return (
     <div>
       <List>
         {users.map((user) => (
           <ListItem className={classes.item} button key={user.id}>
+            <Avatar className={classes.purple}>
+              {user.firstName.charAt(0)}
+              {user.lastName.charAt(0)}
+            </Avatar>
             <ListItemText
               id={user.id}
-              primary={
-                <p>
-                  First: {user.firstName} Last: {user.lastName} User:{" "}
-                  {user.email}
-                </p>
-              }
+              primary={<Typography>{user.email}</Typography>}
             />
             {user.isFriend ? (
               <IconButton>
                 <CheckIcon />
               </IconButton>
             ) : (
-              <ListItemSecondaryAction>
-                <IconButton
-                  aria-label="addFriend"
-                  onClick={() => {
-                    handler(user);
-                  }}
-                >
-                  <AddIcon />
-                </IconButton>
-              </ListItemSecondaryAction>
+              [
+                user.id === currUser.id ? null : (
+                  <ListItemSecondaryAction>
+                    <IconButton
+                      aria-label="addFriend"
+                      onClick={() => {
+                        handler(user);
+                      }}
+                    >
+                      <AddIcon />
+                    </IconButton>
+                  </ListItemSecondaryAction>
+                ),
+              ]
             )}
           </ListItem>
         ))}

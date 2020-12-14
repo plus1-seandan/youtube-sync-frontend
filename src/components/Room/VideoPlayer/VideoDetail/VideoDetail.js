@@ -3,7 +3,8 @@ import ReactPlayer from "react-player/youtube";
 import io from "socket.io-client";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
-import TestPlayer from "./TestPlayer/TestPlayer";
+import Video from "./Video/Video";
+import { useSelector, useDispatch, connect } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -16,30 +17,25 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const VideoDetail = ({ video, room, roomId, videoPlaying, seek }) => {
-  const videoId = video ? video.id.videoId : "";
+const VideoDetail = (props) => {
+  // const videoId = video ? video.id.videoId : "";
   const classes = useStyles();
-
-  if (videoId) {
-    return (
-      <div className={classes.root}>
-        <Grid container spacing={3}>
-          <TestPlayer
-            url={`https://www.youtube.com/embed/${videoId}`}
-            videoPlaying={videoPlaying}
-            room={room}
-            roomId={roomId}
-            seek={seek}
-          />
-        </Grid>
-      </div>
-    );
-  }
+  console.log(props);
+  // if (videoId) {
   return (
-    <div>
-      {/* <h1>Search videos...</h1> */}
-      <br></br>
+    <div className={classes.root}>
+      <Grid container spacing={3}>
+        <Video roomId={props.roomId} />
+      </Grid>
     </div>
   );
+  // }
+  // return (
+  //   <div>
+  //     {/* <h1>Search videos...</h1> */}
+  //     <br></br>
+  //   </div>
+  // );
 };
+
 export default VideoDetail;

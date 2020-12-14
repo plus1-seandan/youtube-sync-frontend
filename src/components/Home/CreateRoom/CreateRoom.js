@@ -44,6 +44,7 @@ const CreateRoom = () => {
     };
     if (newRoom.name === "") {
       setError("Room Name required");
+      return;
     }
     if (newRoom.isPrivate) {
       newRoom.password = event.target.elements.password.value;
