@@ -78,7 +78,6 @@ const MyRooms = () => {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("submit triggered");
     console.log(e.target.elements);
   };
 

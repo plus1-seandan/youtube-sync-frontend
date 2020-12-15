@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -12,7 +12,8 @@ import CheckIcon from "@material-ui/icons/Check";
 import Avatar from "@material-ui/core/Avatar";
 import { deepOrange, deepPurple } from "@material-ui/core/colors";
 import { Typography } from "@material-ui/core";
-import { clearSearch } from "../../../actions";
+import { clearSearch } from "../../../../actions";
+import User from "./User/User";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -38,41 +39,12 @@ const useStyles = makeStyles((theme) => ({
 const UserList = ({ users, handler }) => {
   const classes = useStyles();
   const currUser = useSelector((state) => state.currUserInfo);
-  console.log(users);
+
   return (
     <div>
       <List>
         {users.map((user) => (
-          <ListItem className={classes.item} button key={user.id}>
-            <Avatar className={classes.purple}>
-              {user.firstName.charAt(0)}
-              {user.lastName.charAt(0)}
-            </Avatar>
-            <ListItemText
-              id={user.id}
-              primary={<Typography>{user.email}</Typography>}
-            />
-            {user["Friends.RequesteeId"] != null ? (
-              <IconButton>
-                <CheckIcon />
-              </IconButton>
-            ) : (
-              [
-                user.id === currUser.id ? null : (
-                  <ListItemSecondaryAction>
-                    <IconButton
-                      aria-label="addFriend"
-                      onClick={() => {
-                        handler(user);
-                      }}
-                    >
-                      <AddIcon />
-                    </IconButton>
-                  </ListItemSecondaryAction>
-                ),
-              ]
-            )}
-          </ListItem>
+          <User user={user} />
         ))}
       </List>
     </div>

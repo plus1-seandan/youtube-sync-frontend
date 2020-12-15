@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import axios from "axios";
-import UserList from "../../Search/UserList/UserList";
+import UserList from "./UserList/UserList";
 import {
   setSearchedUsers,
   updateSearchedUsers,

@@ -41,18 +41,18 @@ const MyFriendsRoom = (prop) => {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    axios
-      .get("http://localhost:5001/search-myFriends", {
-        params: {
-          userId: currUser.id,
-        },
-      })
-      .then(function (response) {
-        dispatch(getMyFriends(response.data));
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    // axios
+    //   .get("http://localhost:5001/search-myFriends", {
+    //     params: {
+    //       userId: currUser.id,
+    //     },
+    //   })
+    //   .then(function (response) {
+    //     dispatch(getMyFriends(response.data));
+    //   })
+    //   .catch(function (error) {
+    //     console.log(error);
+    //   });
     return () => {
       // Anything in here is fired on component unmount.
     };
@@ -91,7 +91,7 @@ const MyFriendsRoom = (prop) => {
       setError("");
     }
     axios
-      .post("http://localhost:5001/add-member", {
+      .post("http://localhost:5001/rooms/add-member", {
         userId,
         roomId,
       })
@@ -112,14 +112,6 @@ const MyFriendsRoom = (prop) => {
           <div>
             <List>
               {myFriends.map((friend) => (
-                // <ListItem
-                //   className={classes.item}
-                //   button
-                //   key={friend.id}
-                //   onClick={handleClick(friend)}
-                // >
-                //   {friend.email}
-                // </ListItem>
                 <ListItem className={classes.item} button key={friend.id}>
                   <ListItemText
                     id={friend.id}

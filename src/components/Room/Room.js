@@ -80,7 +80,7 @@ const Room = (props) => {
     });
 
     socket.on("user-left", (data) => {
-      dispatch(addMessage(props.thisRoom.room.id, currUser, data));
+      dispatch(addMessage(props.thisRoom.room.id, data.sender, data.message));
     });
 
     socket.on("change-video", (payload) => {
@@ -91,6 +91,7 @@ const Room = (props) => {
       socket.emit("user-disconnect", {
         roomId: props.thisRoom.room.id,
         sender: { id: "ADMIN", name: "ADMIN" },
+        leaver: currUser,
       });
       socket.off();
       console.log("user has left");

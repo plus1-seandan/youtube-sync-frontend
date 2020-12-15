@@ -63,7 +63,7 @@ const MyRoom = (props) => {
   const handleRemoveRoom = (room) => {
     console.log(room);
     axios
-      .delete(`http://localhost:5001/delete-room/`, {
+      .delete(`http://localhost:5001/rooms/delete-room/`, {
         params: {
           roomId: room.id,
           userId: currUser.id,
@@ -86,11 +86,11 @@ const MyRoom = (props) => {
           name="room"
           primary={
             <p>
-              {props.room.name} {props.room.isPrivate ? "Private" : "Public"}
+              {props.room.name} {props.room.private ? "Private" : "Public"}
             </p>
           }
         />
-        {props.room.isPrivate ? (
+        {props.room.private ? (
           <TextField
             id="standard-basic"
             label="Password"

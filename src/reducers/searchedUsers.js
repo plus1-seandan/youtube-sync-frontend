@@ -14,15 +14,15 @@ const searchedUsersReducer = (state = [], action) => {
         return draft;
       });
 
-    case "UPATE_SEARCHEDUSERS":
-      console.log(action);
-      return produce(state, (draft) => {
-        for (var i = 0; i < draft.length; i += 1) {
-          if (draft[i].id === action.payload.id) {
-            draft[i].isFriend = true;
-          }
-        }
-      });
+    // case "UPATE_SEARCHEDUSERS":
+    //   console.log(action);
+    //   return produce(state, (draft) => {
+    //     for (var i = 0; i < draft.length; i += 1) {
+    //       if (draft[i].id === action.payload.id) {
+    //         draft[i].isFriend = true;
+    //       }
+    //     }
+    //   });
 
     case "CLEAR_SEARCH":
       return [];

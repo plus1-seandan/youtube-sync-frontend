@@ -60,14 +60,13 @@ const MyFriends = () => {
   const handleClick = (friend) => {
     // , { data: { friend: friend, user: currUser } }
     axios
-      .delete(`http://localhost:5001/delete-friend/`, {
+      .delete(`http://localhost:5001/accounts/delete-friend/`, {
         params: {
           friendId: friend.id,
           userId: currUser.id,
         },
       })
       .then((res) => {
-        console.log("trigger");
         dispatch(removeFriend(friend));
       })
       .catch((err) => {
