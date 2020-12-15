@@ -56,27 +56,24 @@ const CreateRoom = () => {
       newRoom.password = "";
     }
     axios
-      .post("http://localhost:5001/create-room", newRoom)
+      .post("http://localhost:5001/rooms/create-room", {
+        room: newRoom,
+        user: currUser,
+      })
       .then(function (response) {
-        const roomId = newRoom.id;
-        const userId = currUser.id;
-
-        axios
-          .post("http://localhost:5001/add-member", {
-            userId,
-            roomId,
-          })
-          .then(function (response) {
-            dispatch(addMyRoom(newRoom));
-            history.push({
-              pathname: `/room`,
-              state: {
-                email: currUser.email,
-                userId: currUser.id,
-                room: newRoom.name,
-                roomId: newRoom.id,
-              },
-            });
+        // const roomId = newRoom.id;
+        // const userId = currUser.id;
+        const newRoom = response.data;
+        dispatch(addMyRoom(newRoom));
+        history
+          .push({
+            pathname: `/room`,
+            state: {
+              email: currUser.email,
+              userId: currUser.id,
+              room: newRoom.name,
+              roomId: newRoom.id,
+            },
           })
           .catch(function (error) {
             console.log(error);

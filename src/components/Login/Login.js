@@ -71,7 +71,7 @@ const Login = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     axios
-      .get("http://localhost:5001/sign-in", {
+      .get("http://localhost:5001/accounts/sign-in", {
         params: {
           username: event.target.elements.email.value,
           password: event.target.elements.password.value,
@@ -79,11 +79,10 @@ const Login = () => {
       })
       .then(function (response) {
         console.log(response.data);
-        if (response.data === "Username not found") {
-          setError(response.data);
-        } else if (response.data === "Incorrect Password") {
-          setError(response.data);
+        if (response.data === "Failed") {
+          setError("Incorrect Username or Password");
         } else {
+          console.log(response);
           //set currUser state
           dispatch(clearState());
           dispatch(setAccountInfo(response.data));

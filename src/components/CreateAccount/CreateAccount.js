@@ -52,6 +52,7 @@ export default function CreateAccount() {
   const classes = useStyles();
   const history = useHistory();
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -79,14 +80,17 @@ export default function CreateAccount() {
       return;
     }
     axios
-      .post("http://localhost:5001/create-account", newUser)
+      .post("http://localhost:5001/accounts/create-account", newUser)
       .then(function (response) {
-        if (response.data === "ERROR") {
+        if (response.data === "Failed") {
           setError("An account with this email already exists.");
           return;
         }
-        alert("New User Created. Please sign in");
-        history.push(`/`);
+        // alert("New User Created. Please sign in");
+        setSuccess("Successfully created account");
+        setTimeout(() => {
+          history.push("/");
+        }, 1500);
       })
       .catch(function (error) {
         console.log(error);
@@ -153,6 +157,7 @@ export default function CreateAccount() {
             </Grid>
           </Grid>
           {error ? <Alert severity="error">{error}</Alert> : null}
+          {success ? <Alert severity="success">{success}</Alert> : null}
           <Button
             type="submit"
             fullWidth

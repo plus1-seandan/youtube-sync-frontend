@@ -37,12 +37,13 @@ const MyRooms = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5001/search-myRooms", {
+      .get("http://localhost:5001/rooms/get-my-rooms", {
         params: {
           userId: currUser.id,
         },
       })
       .then(function (response) {
+        console.log(response);
         dispatch(getMyRooms(response.data));
         setLoading(false);
       })
@@ -82,7 +83,7 @@ const MyRooms = () => {
   };
 
   if (isLoading) {
-    return null;
+    return <h1>My Rooms</h1>;
   }
   return (
     <div>

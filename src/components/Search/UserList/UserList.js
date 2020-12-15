@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
 const UserList = ({ users, handler }) => {
   const classes = useStyles();
   const currUser = useSelector((state) => state.currUserInfo);
-
+  console.log(users);
   return (
     <div>
       <List>
@@ -52,7 +52,7 @@ const UserList = ({ users, handler }) => {
               id={user.id}
               primary={<Typography>{user.email}</Typography>}
             />
-            {user.isFriend ? (
+            {user["Friends.RequesteeId"] != null ? (
               <IconButton>
                 <CheckIcon />
               </IconButton>

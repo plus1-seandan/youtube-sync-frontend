@@ -46,12 +46,13 @@ const Room = (props) => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5001/search-roomMembers", {
+      .get("http://localhost:5001/rooms/search-room-members", {
         params: {
           roomId: props.thisRoom.room.id,
         },
       })
       .then(function (response) {
+        console.log(response.data);
         const roomId = props.thisRoom.room.id;
         const roomMembersArr = response.data;
         console.log(roomMembersArr);

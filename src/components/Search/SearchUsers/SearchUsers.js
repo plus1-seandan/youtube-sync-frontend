@@ -42,9 +42,9 @@ const SearchUsers = () => {
     const currUserId = currUser.id;
     const userId = user.id;
     axios
-      .post("http://localhost:5001/add-friend", { currUserId, userId })
+      .post("http://localhost:5001/accounts/add-friend", { currUserId, userId })
       .then(function (response) {
-        if (response.data === "success") {
+        if (response.data === "Success") {
           // alert(user.email + " has been added as a friend");
           // user.isFriend = true;
           console.log(user);
@@ -62,7 +62,7 @@ const SearchUsers = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     axios
-      .get("http://localhost:5001/search-users", {
+      .get("http://localhost:5001/accounts/search-users", {
         params: {
           query: query,
           acctId: currUser.id,
