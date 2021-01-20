@@ -45,7 +45,7 @@ const MyRoom = (props) => {
   const handleClick = (room) => {
     function inner(e) {
       console.log(room);
-      if (room.isPrivate) {
+      if (room.private) {
         if (pwdInputs !== room.password) {
           setError("Incorrect Password");
           return;

@@ -1,10 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
-import App from "./App";
 import { createStore } from "redux";
 import allReducer from "./reducers";
 import { Provider } from "react-redux";
+import Routes from "./routes";
 
 function saveToSessionStorage(state) {
   try {
@@ -36,7 +36,7 @@ store.subscribe(() => saveToSessionStorage(store.getState()));
 
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <Routes />
   </Provider>,
   document.getElementById("root")
 );

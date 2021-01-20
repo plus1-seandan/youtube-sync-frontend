@@ -104,6 +104,7 @@ const Room = (props) => {
         q: termFromSearchBar,
       },
     });
+    console.log(response);
     setVideos(response.data.items);
   };
 

@@ -86,6 +86,8 @@ const Login = () => {
           //set currUser state
           dispatch(clearState());
           dispatch(setAccountInfo(response.data));
+          // dispatch(getMyRooms(response.data));
+
           history.push({
             pathname: `/home`,
             // pathname: `/home?id=${response.data.firstName}`,
