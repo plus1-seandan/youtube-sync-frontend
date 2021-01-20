@@ -16,14 +16,7 @@ function RoomPage({ match }) {
       <GridItem rowStart={1} rowEnd={2} colStart={1} colEnd={13} bg="tomato">
         <Header />
       </GridItem>
-      <GridItem
-        rowStart={2}
-        rowEnd={12}
-        colStart={1}
-        colEnd={3}
-        bg="#F6AD55"
-      ></GridItem>
-      <GridItem rowStart={2} rowEnd={12} colStart={3} colEnd={12} bg="#9AE6B4">
+      <GridItem rowStart={2} rowEnd={12} colStart={1} colEnd={12}>
         <RoomBody roomId={roomId} />
       </GridItem>
       <GridItem
