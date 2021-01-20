@@ -1,9 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom";
-
+import { ChakraProvider } from "@chakra-ui/react";
 import { createStore } from "redux";
 import allReducer from "./reducers";
 import { Provider } from "react-redux";
+
 import Routes from "./routes";
 
 function saveToSessionStorage(state) {
@@ -35,8 +36,10 @@ function loadFromSessionStorage() {
 store.subscribe(() => saveToSessionStorage(store.getState()));
 
 ReactDOM.render(
-  <Provider store={store}>
-    <Routes />
-  </Provider>,
+  <ChakraProvider>
+    <Provider store={store}>
+      <Routes />
+    </Provider>
+  </ChakraProvider>,
   document.getElementById("root")
 );
