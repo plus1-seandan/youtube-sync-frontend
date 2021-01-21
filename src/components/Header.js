@@ -1,5 +1,5 @@
-import React, { useSelector } from "react";
-import { GridItem, Grid, Box, Heading, Spacer, Button } from "@chakra-ui/react";
+import React from "react";
+import { Box, Heading, Spacer, Button } from "@chakra-ui/react";
 import YouTubeIcon from "@material-ui/icons/YouTube";
 
 export default function Header() {

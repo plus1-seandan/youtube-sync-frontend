@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { Box, Button, VStack, Heading, Text } from "@chakra-ui/react";
+import { Box, Button, VStack, Heading } from "@chakra-ui/react";
 
 import { setMyRooms } from "../actions";
 import NewRoomModal from "./NewRoomModal";
 
 const MyRooms = () => {
-  const history = useHistory();
   const [modalOpen, setModalOpen] = useState(false);
   const myRooms = useSelector((state) => state.myRooms);
   const dispatch = useDispatch();

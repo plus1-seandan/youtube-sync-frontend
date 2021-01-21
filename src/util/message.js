@@ -5,14 +5,10 @@ export const formatMessages = async (messages) => {
   if (!messages) {
     return [];
   }
-  console.log({ messages });
   const { data } = await getMe();
-  console.log({ data });
   const msgs = messages.map((msg) => {
-    console.log({ msg });
     let msgId = msg.sender.id;
     if (msgId === data.id) {
-      console.log("hit this line");
       msgId = 0;
     }
     const formattedMsg = new Message({
@@ -22,6 +18,5 @@ export const formatMessages = async (messages) => {
     });
     return formattedMsg;
   });
-  console.log({ msgs });
   return msgs;
 };

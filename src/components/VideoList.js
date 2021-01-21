@@ -1,8 +1,6 @@
 import React from "react";
 
 import { Box, Image, Button, VStack } from "@chakra-ui/react";
-import { useDispatch } from "react-redux";
-import { setVideo } from "../actions";
 import { useParams } from "react-router-dom";
 
 const Video = ({ video, selectVideo }) => {

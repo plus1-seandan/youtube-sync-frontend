@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Messages from "./Messages.js";
-import { useSelector, useDispatch, connect } from "react-redux";
-import { Input, Box, Spacer } from "@chakra-ui/react";
+import {  useDispatch } from "react-redux";
+import { Input, Box } from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
 
 import { addMessage } from "../actions";

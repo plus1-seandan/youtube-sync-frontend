@@ -1,6 +1,5 @@
 import React from "react";
-import { useParams } from "react-router-dom";
-import { GridItem, Grid, Box } from "@chakra-ui/react";
+import { GridItem, Grid } from "@chakra-ui/react";
 import Header from "../components/Header";
 import RoomBody from "../components/RoomBody";
 

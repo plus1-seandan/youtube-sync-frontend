@@ -1,13 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import axios from "axios";
-import { useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { Box, Button, VStack, Heading, Text } from "@chakra-ui/react";
+import { Box, Button, VStack, Heading } from "@chakra-ui/react";
 
 import { setMyFriends } from "../actions";
 
 const MyFriends = () => {
-  const history = useHistory();
   const myFriends = useSelector((state) => state.myFriends);
   const dispatch = useDispatch();
 
@@ -18,7 +16,6 @@ const MyFriends = () => {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
       });
-      console.log({ data });
       dispatch(setMyFriends(data));
     };
     asyncFunc();

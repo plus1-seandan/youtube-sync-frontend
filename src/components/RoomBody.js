@@ -1,14 +1,13 @@
 import axios from "axios";
-import { GridItem, Grid, Box } from "@chakra-ui/react";
+import { GridItem, Grid } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import VideoList from "./VideoList";
 import VideoSearch from "./VideoSearch";
 import VideoPlayer from "./VideoPlayer";
 import socket from "../apis/socket";
 import RoomMembers from "./RoomMembers";
-import { getMe } from "../util/account";
 import Chat from "./Chat";
-import { initializeVideo, setVideo, startMessage } from "../actions";
+import { setVideo } from "../actions";
 import { useDispatch } from "react-redux";
 
 function RoomBody({ roomId }) {
@@ -23,7 +22,6 @@ function RoomBody({ roomId }) {
   }, []);
 
   const selectVideo = (roomId, video) => {
-    console.log("hit this line ");
     dispatch(setVideo(roomId, video));
     socket.emit("load-video", {
       roomId: roomId,

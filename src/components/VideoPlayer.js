@@ -1,10 +1,9 @@
 import React, { useEffect, useRef } from "react";
-import { GridItem, Grid, Box, Text } from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
 import socket from "../apis/socket";
 
 import ReactPlayer from "react-player";
 import { connect, useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
 import { setPlayed, togglePlay } from "../actions";
 
 const mapStateToProps = (state, ownProps) => {
@@ -18,7 +17,6 @@ const VideoPlayer = (props) => {
   const dispatch = useDispatch();
 
   const refPlayer = useRef();
-  const { id } = useParams();
 
   useEffect(() => {
     socket.on("video-play", (payload) => {

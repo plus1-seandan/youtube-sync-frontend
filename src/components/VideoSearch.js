@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Button, VStack, Heading, Text, Input } from "@chakra-ui/react";
+import { Box, Button, Text, Input } from "@chakra-ui/react";
 
 const VideoSearch = ({ searchVideos }) => {
   const [query, setQuery] = useState("");

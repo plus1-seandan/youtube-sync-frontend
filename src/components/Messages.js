@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { ChatFeed, Message, BubbleGroup } from "react-chat-ui";
-import { useSelector, useDispatch, connect } from "react-redux";
-import { Input, Box, Spacer } from "@chakra-ui/react";
+import { ChatFeed } from "react-chat-ui";
+import { connect } from "react-redux";
+import { Box } from "@chakra-ui/react";
 
 import { formatMessages } from "../util/message";
 
 const mapStateToProps = (state, ownProps) => {
-  console.log(ownProps);
   const roomMessage = state["messages"][ownProps.roomId];
   return {
     messages: roomMessage,
@@ -19,7 +18,6 @@ const Messages = (props) => {
   useEffect(() => {
     const asyncFunc = async () => {
       const msgs = await formatMessages(props.messages);
-      console.log({ msgs });
       setFormattedMessages(msgs);
     };
     asyncFunc();
