@@ -4,64 +4,38 @@ import React, { useEffect, useState } from "react";
 import VideoList from "./VideoList";
 import VideoSearch from "./VideoSearch";
 import VideoPlayer from "./VideoPlayer";
-import socket from "../socket";
+import socket from "../apis/socket";
 import RoomMembers from "./RoomMembers";
 import { getMe } from "../util/account";
 import Chat from "./Chat";
+import { initializeVideo, setVideo, startMessage } from "../actions";
+import { useDispatch } from "react-redux";
 
 function RoomBody({ roomId }) {
   const [searchedVideos, setSearchedVideos] = useState([]);
-  const [selectedVideoId, setSelectedVideoId] = useState();
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    // const asyncFunc = async () => {
-    //   const { data } = await getMe();
-    //   socket.emit("join-room", {
-    //     roomId: roomId,
-    //     acctId: data.id,
-    //   });
-    // };
-    // asyncFunc();
-    // socket.on("user-joined", (data) => {
-    //   // dispatch(
-    //   //   addMessage(
-    //   //     props.thisRoom.room.id,
-    //   //     { id: "ADMIN", name: "ADMIN" },
-    //   //     `${data.firstName} joined the chat`
-    //   //   )
-    //   // );
-    // });
-
-    // socket.on("user-left", (data) => {
-    //   dispatch(addMessage(props.thisRoom.room.id, data.sender, data.message));
-    // });
-
-    // socket.on("change-video", (payload) => {
-    //   dispatch(setVideo(payload.roomId, payload.video));
-    // });
-
-    return () => {
-      // socket.emit("user-disconnect", {
-      //   roomId: props.thisRoom.room.id,
-      //   sender: { id: "ADMIN", name: "ADMIN" },
-      //   leaver: currUser,
-      // });
-      // socket.off();
-    };
+    socket.on("change-video", (payload) => {
+      dispatch(setVideo(payload.roomId, payload.video));
+    });
+    return () => {};
   }, []);
 
-  const selectVideo = (videoId) => {
-    setSelectedVideoId(videoId);
+  const selectVideo = (roomId, video) => {
+    console.log("hit this line ");
+    dispatch(setVideo(roomId, video));
+    socket.emit("load-video", {
+      roomId: roomId,
+      video: video,
+    });
   };
 
   const searchVideos = async (query) => {
-    console.log({ query });
     const response = await axios.get(
       `http://localhost:5001/youtube?query=${query}`
     );
-    console.log({ data: response.data });
     setSearchedVideos(response.data);
-    console.log(searchedVideos);
   };
 
   return (
@@ -82,7 +56,7 @@ function RoomBody({ roomId }) {
         colEnd={11}
         border="solid"
       >
-        <VideoPlayer videoId={selectedVideoId} />
+        <VideoPlayer roomId={roomId} />
       </GridItem>
       <GridItem
         rowStart={1}

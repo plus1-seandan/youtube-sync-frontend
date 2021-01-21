@@ -1,20 +1,13 @@
 import React from "react";
 
-import {
-  GridItem,
-  Grid,
-  Box,
-  Wrap,
-  WrapItem,
-  Text,
-  Image,
-  Badge,
-  Spacer,
-  Button,
-  VStack,
-} from "@chakra-ui/react";
+import { Box, Image, Button, VStack } from "@chakra-ui/react";
+import { useDispatch } from "react-redux";
+import { setVideo } from "../actions";
+import { useParams } from "react-router-dom";
 
 const Video = ({ video, selectVideo }) => {
+  const { id } = useParams();
+
   return (
     <Box
       d="flex"
@@ -35,7 +28,7 @@ const Video = ({ video, selectVideo }) => {
       <Box justifyContent="flex-end" pt="20px">
         <Button
           onClick={() => {
-            selectVideo(video.id.videoId);
+            selectVideo(id, video);
           }}
         >
           Watch
@@ -46,7 +39,6 @@ const Video = ({ video, selectVideo }) => {
 };
 
 const VideoList = ({ videos, selectVideo }) => {
-  console.log({ videos });
   return (
     <Box
       overflowY="scroll"

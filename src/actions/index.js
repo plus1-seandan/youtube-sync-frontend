@@ -1,10 +1,3 @@
-export const setAccountInfo = (account) => {
-  return {
-    type: "SIGN_IN",
-    payload: account,
-  };
-};
-
 export const setMyRooms = (rooms) => {
   // console.log(rooms);
   return {

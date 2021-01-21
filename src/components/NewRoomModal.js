@@ -5,21 +5,12 @@ import {
   ModalContent,
   ModalHeader,
   ModalCloseButton,
-  ModalBody,
-  ModalFooter,
   Box,
   Input,
-  Textarea,
-  Select,
-  Spacer,
   FormControl,
   FormLabel,
-  FormHelperText,
-  StatHelpText,
-  Text,
   Switch,
 } from "@chakra-ui/react";
-import { AddIcon, MinusIcon } from "@chakra-ui/icons";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useHistory } from "react-router-dom";

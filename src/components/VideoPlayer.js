@@ -1,113 +1,114 @@
-import React, {
-  Component,
-  useEffect,
-  useState,
-  useRef,
-  createRef,
-} from "react";
+import React, { useEffect, useRef } from "react";
 import { GridItem, Grid, Box, Text } from "@chakra-ui/react";
-
-// import { hot } from "react-hot-loader";
-import socket from "../socket";
-// import { useSelector, useDispatch, connect } from "react-redux";
-
-// import { togglePlay, setPlayed } from "../../../../../actions";
+import socket from "../apis/socket";
 
 import ReactPlayer from "react-player";
-import { useDispatch } from "react-redux";
+import { connect, useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
+import { setPlayed, togglePlay } from "../actions";
 
-const VideoPlayer = ({ videoId }) => {
-  // const [seeking, setSeeking] = useState(false);
-  // const [played, setPlayed] = useState(0);
-  // const [isPlaying, setIsPlaying] = useState(false);
-  const initState = {
-    id: videoId,
-    playing: false,
+const mapStateToProps = (state, ownProps) => {
+  const video = state["videos"][ownProps.roomId];
+  return {
+    video: video,
   };
-  const refPlayer = useRef();
-  const [video, setVideo] = useState(initState);
+};
+
+const VideoPlayer = (props) => {
   const dispatch = useDispatch();
 
-  const handlePlay = () => {
-    // setIsPlaying(true);
-    socket.emit("video-play", {
-      // roomId: props.roomId,
-    });
-  };
-  const handlePause = () => {
-    // setIsPlaying(false);
-    socket.emit("video-pause", {
-      // roomId: props.roomId,
-    });
-  };
+  const refPlayer = useRef();
+  const { id } = useParams();
 
   useEffect(() => {
     socket.on("video-play", (payload) => {
-      // dispatch(togglePlay(props.roomId, true));
+      dispatch(togglePlay(props.roomId, true));
     });
     socket.on("video-pause", (payload) => {
-      // dispatch(togglePlay(props.roomId, false));
+      dispatch(togglePlay(props.roomId, false));
     });
     socket.on("seek-video", (payload) => {
-      console.log(payload);
-      // dispatch(setPlayed(props.roomId, payload));
-      // setPlayed(parseFloat(payload));
+      dispatch(setPlayed(props.roomId, payload));
       refPlayer.current.player.seekTo(parseFloat(payload));
     });
-  }, [videoId]);
+  }, [props.video]);
 
-  const handleSeekMouseDown = (e) => {
-    console.log("handleSeekMouseDown");
-    // setSeeking(true);
+  const handlePlay = () => {
+    socket.emit("video-play", {
+      roomId: props.roomId,
+    });
+    dispatch(togglePlay(props.roomId, true));
+  };
+  const handlePause = () => {
+    socket.emit("video-pause", {
+      roomId: props.roomId,
+    });
+    dispatch(togglePlay(props.roomId, false));
   };
 
+  // const handleSeekMouseDown = (e) => {
+  //   console.log("handleSeekMouseDown");
+  //   // setSeeking(true);
+  // };
+
   const handleSeekChange = (e) => {
-    console.log("handleSeekChange");
-    // dispatch(setPlayed(props.roomId, e.target.value));
-    // setPlayed(parseFloat(e.target.value));
+    dispatch(setPlayed(props.roomId, e.target.value));
   };
 
   const handleSeekMouseUp = (e) => {
-    console.log("handleSeekMouseUp");
-
-    // setSeeking(false);
     refPlayer.current.player.seekTo(parseFloat(e.target.value));
     socket.emit("seek-video", {
-      // roomId: props.roomId,
+      roomId: props.roomId,
       seek: e.target.value,
     });
   };
 
   return (
     <Box h="100%">
-      {videoId ? (
-        <ReactPlayer
-          ref={refPlayer}
-          className="react-player"
-          width="100%"
-          height="100%"
-          url={`https://www.youtube.com/embed/${videoId}}`}
-          // pip={pip}
-          playing={video.playing}
-          controls={false}
-          // light={light}
-          // loop={loop}
-          // playbackRate={playbackRate}
-          // volume={volume}
-          // muted={muted}
-          // onReady={() => console.log("onReady")}
-          // onStart={() => console.log("onStart")}
-          onPlay={handlePlay}
-          // onEnablePIP={this.handleEnablePIP}
-          // onDisablePIP={this.handleDisablePIP}
-          onPause={handlePause}
-          // onBuffer={() => console.log("onBuffer")}
-          // onSeek={(e) => console.log("onSeek", e)}
-          // onEnded={this.handleEnded}
-          // onError={(e) => console.log("onError", e)}
-          // onProgress={this.handleProgress}
-          // onDuration={this.handleDuration}
-        />
+      {props.video && props.video.videoInfo ? (
+        <Box h="100%">
+          <Box h="90%">
+            <ReactPlayer
+              ref={refPlayer}
+              played={props.video.played}
+              className="react-player"
+              width="100%"
+              height="100%"
+              url={`https://www.youtube.com/embed/${props.video.videoInfo.id.videoId}}`}
+              playing={props.video.isPlaying}
+              controls={false}
+              onPlay={handlePlay}
+              onPause={handlePause}
+            />
+          </Box>
+          <Box>
+            <table>
+              <tbody>
+                <tr>
+                  <th>Seek</th>
+                  <td>
+                    <input
+                      type="range"
+                      min={0}
+                      max={0.999999}
+                      step="any"
+                      value={props.video.played}
+                      // onMouseDown={handleSeekMouseDown}
+                      onChange={handleSeekChange}
+                      onMouseUp={handleSeekMouseUp}
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <th>Played</th>
+                  <td>
+                    <progress max={1} value={props.video.played} />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </Box>
+        </Box>
       ) : (
         <Box d="flex" justifyContent="center" alignItems="center" h="100%">
           <Text>Select Video to play</Text>
@@ -117,32 +118,4 @@ const VideoPlayer = ({ videoId }) => {
   );
 };
 
-export default VideoPlayer;
-
-{
-  /* <table>
-          <tbody>
-            <tr>
-              <th>Seek</th>
-              <td>
-                <input
-                  type="range"
-                  min={0}
-                  max={0.999999}
-                  step="any"
-                  value={props.video.played}
-                  onMouseDown={handleSeekMouseDown}
-                  onChange={handleSeekChange}
-                  onMouseUp={handleSeekMouseUp}
-                />
-              </td>
-            </tr>
-            <tr>
-              <th>Played</th>
-              <td>
-                <progress max={1} value={props.video.played} />
-              </td>
-            </tr>
-          </tbody>
-        </table> */
-}
+export default connect(mapStateToProps)(VideoPlayer);

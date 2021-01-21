@@ -1,17 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { makeStyles } from "@material-ui/core/styles";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
 import { useHistory, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-// import { getMyRooms } from "../../../actions";
-import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
-import IconButton from "@material-ui/core/IconButton";
-import ListItemText from "@material-ui/core/ListItemText";
-import TextField from "@material-ui/core/TextField";
-// import MyRoom from "./MyRoom/MyRoom";
 import { Box, Button, VStack, Heading, Text } from "@chakra-ui/react";
 
 import { setMyRooms } from "../actions";
@@ -31,7 +21,6 @@ const MyRooms = () => {
         },
       });
       dispatch(setMyRooms(response.data));
-      console.log({ myRooms });
     };
     asyncFunc();
 
