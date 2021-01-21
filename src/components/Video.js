@@ -9,10 +9,7 @@ import { findDOMNode } from "react-dom";
 import { hot } from "react-hot-loader";
 import socket from "../../../../../socket";
 import { useSelector, useDispatch, connect } from "react-redux";
-import "./reset.css";
-import "./defaults.css";
-import "./range.css";
-import "./App.css";
+
 import { togglePlay, setPlayed } from "../../../../../actions";
 
 import ReactPlayer from "react-player";

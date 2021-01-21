@@ -1,8 +1,5 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import GridList from "@material-ui/core/GridList";
-import GridListTile from "@material-ui/core/GridListTile";
-import GridListTileBar from "@material-ui/core/GridListTileBar";
+
 import {
   GridItem,
   Grid,
@@ -25,6 +22,7 @@ const Video = ({ video, selectVideo }) => {
       w="100%"
       borderWidth="1px"
       borderRadius="lg"
+      border="solid"
     >
       <Image
         objectFit="cover"

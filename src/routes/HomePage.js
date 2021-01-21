@@ -1,6 +1,6 @@
 import React from "react";
 import { GridItem, Grid, Box } from "@chakra-ui/react";
-import Header from "../components/Header/Header";
+import Header from "../components/Header";
 import MyRooms from "../components/MyRooms";
 import MyFriends from "../components/MyFriends";
 

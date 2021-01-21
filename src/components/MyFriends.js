@@ -46,6 +46,7 @@ const MyFriends = () => {
       flexDirection="column"
       alignItems="flex-start"
     >
+      <Button>Search Friends</Button>
       <VStack spacing={4}>
         {myFriends.length > 0 &&
           myFriends.map((friend) => <Friend friend={friend} />)}

@@ -15,9 +15,11 @@ import TextField from "@material-ui/core/TextField";
 import { Box, Button, VStack, Heading, Text } from "@chakra-ui/react";
 
 import { setMyRooms } from "../actions";
+import NewRoomModal from "./NewRoomModal";
 
 const MyRooms = () => {
   const history = useHistory();
+  const [modalOpen, setModalOpen] = useState(false);
   const myRooms = useSelector((state) => state.myRooms);
   const dispatch = useDispatch();
 
@@ -38,6 +40,12 @@ const MyRooms = () => {
     };
   }, []);
 
+  const handleClose = () => {
+    setModalOpen(false);
+  };
+  const openModal = () => {
+    setModalOpen(true);
+  };
   return (
     <Box
       overflowY="scroll"
@@ -46,10 +54,13 @@ const MyRooms = () => {
       flexDirection="column"
       alignItems="flex-start"
     >
-      <Button>Create Room</Button>
+      <Box>
+        <Button onClick={openModal}>Create Room</Button>
+      </Box>
       <VStack spacing={4}>
         {myRooms.length > 0 && myRooms.map((room) => <Room room={room} />)}
       </VStack>
+      <NewRoomModal isOpen={modalOpen} handleClose={handleClose} />
     </Box>
   );
 };

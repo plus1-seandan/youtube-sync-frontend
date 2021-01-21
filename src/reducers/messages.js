@@ -15,10 +15,14 @@ const messagesReducer = (state = {}, action) => {
       const sender = action.payload.sender;
       const message = action.payload.message;
       return produce(state, (draftState) => {
-        draftState[action.payload.roomId].push({
-          sender: { id: sender.id, name: sender.firstName },
-          message: message,
-        });
+        if (!draftState[action.payload.roomId]) {
+          draftState[action.payload.roomId] = [];
+        } else {
+          draftState[action.payload.roomId].push({
+            sender: { id: sender.id, name: sender.firstName },
+            message: message,
+          });
+        }
       });
     default:
       // need this for default case
