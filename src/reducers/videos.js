@@ -10,6 +10,9 @@ const videoReducer = (state = {}, action) => {
       const roomId = action.payload.roomId;
       const video = action.payload.video;
       return produce(state, (draftState) => {
+        if (!draftState[roomId]) {
+          draftState[roomId] = {};
+        }
         draftState[roomId].videoInfo = video;
         draftState[roomId].isPlaying = false;
         draftState[roomId].played = 0;
@@ -37,19 +40,3 @@ const videoReducer = (state = {}, action) => {
 };
 
 export default videoReducer;
-
-//   video: {
-//     kind: 'youtube#searchResult',
-//     etag: '94Zjq6uFsUWeM-iFWg8Je5voNaw',
-//     id: { kind: 'youtube#video', videoId: '4F7VFc_5cu4' },
-//     snippet: {
-//       publishedAt: '2020-12-03T04:44:25Z',
-//       channelId: 'UC8-Th83bH_thdKZDJCrn88g',
-//       title: 'Trump Giving Out Pardons for Christmas | The Tonight Show',
-//       description: 'Jimmy addresses the UK approving a coronavirus vaccine and Trump considering pardons for his family members. The Tonight Show Starring Jimmy Fallon.',
-//       thumbnails: [Object],
-//       channelTitle: 'The Tonight Show Starring Jimmy Fallon',
-//       liveBroadcastContent: 'none',
-//       publishTime: '2020-12-03T04:44:25Z'
-//     }
-// }

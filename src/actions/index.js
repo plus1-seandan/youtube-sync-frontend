@@ -1,11 +1,4 @@
-export const setAccountInfo = (account) => {
-  return {
-    type: "SIGN_IN",
-    payload: account,
-  };
-};
-
-export const getMyRooms = (rooms) => {
+export const setMyRooms = (rooms) => {
   // console.log(rooms);
   return {
     type: "MY_ROOMS",
@@ -20,7 +13,7 @@ export const addMyRoom = (room) => {
   };
 };
 
-export const getMyFriends = (friends) => {
+export const setMyFriends = (friends) => {
   return {
     type: "MY_FRIENDS",
     payload: friends,

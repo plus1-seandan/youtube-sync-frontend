@@ -1,13 +1,13 @@
 import { produce } from "immer";
 
-const myRoomsReducer = (state = {}, action) => {
+const myRoomsReducer = (state = [], action) => {
   switch (action.type) {
     case "MY_ROOMS":
-      const myRooms = action.payload;
-      myRooms.forEach((room) => {
-        state[room.id] = { room };
-      });
-      return state;
+      // state = action.payload;
+      // myRooms.forEach((room) => {
+      //   state[room.id] = { room };
+      // });
+      return action.payload;
 
     case "ADD_MY_ROOM":
       const room = action.payload;
