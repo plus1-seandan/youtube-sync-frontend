@@ -3,8 +3,9 @@ import { GridItem, Grid } from "@chakra-ui/react";
 import Header from "../components/Header";
 import MyRooms from "../components/MyRooms";
 import MyFriends from "../components/MyFriends";
+import SearchAccountBody from "../components/SearchAccountBody";
 
-const HomePage = () => {
+const SearchUsers = () => {
   return (
     <Grid
       h="100vh"
@@ -14,15 +15,12 @@ const HomePage = () => {
       <GridItem rowStart={1} rowEnd={2} colStart={1} colEnd={13}>
         <Header />
       </GridItem>
-      <GridItem rowStart={2} rowEnd={7} colStart={1} colEnd={4}>
-        <MyRooms />
+      <GridItem rowStart={2} rowEnd={12} colStart={1} colEnd={2}></GridItem>
+      <GridItem rowStart={2} rowEnd={13} colStart={2} colEnd={12}>
+        <SearchAccountBody />
       </GridItem>
-      <GridItem rowStart={7} rowEnd={13} colStart={1} colEnd={4}>
-        <MyFriends />
-      </GridItem>
-      <GridItem rowStart={2} rowEnd={12} colStart={4} colEnd={13}></GridItem>
-      <GridItem rowStart={12} rowEnd={13} colStart={1} colEnd={13} />
+      <GridItem rowStart={2} rowEnd={12} colStart={12} colEnd={13}></GridItem>
     </Grid>
   );
 };
-export default HomePage;
+export default SearchUsers;

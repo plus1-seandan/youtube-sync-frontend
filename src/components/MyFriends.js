@@ -4,9 +4,11 @@ import { useSelector, useDispatch } from "react-redux";
 import { Box, Button, VStack, Heading } from "@chakra-ui/react";
 
 import { setMyFriends } from "../actions";
+import { useHistory } from "react-router-dom";
 
 const MyFriends = () => {
   const myFriends = useSelector((state) => state.myFriends);
+  const history = useHistory();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -24,7 +26,9 @@ const MyFriends = () => {
       // Anything in here is fired on component unmount.
     };
   }, []);
-
+  const handleSearchUsers = () => {
+    history.push("/search");
+  };
   return (
     <Box
       overflowY="scroll"
@@ -33,7 +37,7 @@ const MyFriends = () => {
       flexDirection="column"
       alignItems="flex-start"
     >
-      <Button>Search Friends</Button>
+      <Button onClick={handleSearchUsers}>Search Users</Button>
       <VStack spacing={4}>
         {myFriends.length > 0 &&
           myFriends.map((friend) => <Friend friend={friend} />)}
