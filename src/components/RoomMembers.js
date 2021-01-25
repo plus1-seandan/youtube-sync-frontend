@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Box, VStack, Text, Heading } from "@chakra-ui/react";
+import { Box, VStack, Text, Heading, Button } from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
+import AddFriendToRoomModal from "./AddFriendToRoomModal";
 
 function RoomMembers() {
   const { id } = useParams();
   const [roomMembers, setRoomMembers] = useState([]);
-
+  const [openModal, setOpenModal] = useState(false);
   useEffect(() => {
     const asyncFunc = async () => {
       const roomMembers = await axios.get(
@@ -22,6 +23,9 @@ function RoomMembers() {
     asyncFunc();
   }, []);
 
+  const handleClose = () => {
+    setOpenModal(false);
+  };
   return (
     <Box
       overflowY="scroll"
@@ -30,6 +34,18 @@ function RoomMembers() {
       flexDirection="column"
       alignItems="flex-start"
     >
+      <AddFriendToRoomModal
+        isOpen={openModal}
+        onClose={handleClose}
+        roomId={id}
+      />
+      <Button
+        onClick={() => {
+          setOpenModal(true);
+        }}
+      >
+        Add Friends to Room
+      </Button>
       <Text>Room Members</Text>
       <VStack spacing={4}>
         {roomMembers.length > 0 &&

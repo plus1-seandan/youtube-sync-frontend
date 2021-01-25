@@ -10,6 +10,8 @@ import {
   Input,
   VStack,
   Button,
+  Spacer,
+  HStack,
 } from "@chakra-ui/react";
 import { Rating } from "@material-ui/lab";
 import FavoriteIcon from "@material-ui/icons/Favorite";
@@ -17,14 +19,44 @@ import Pagination from "@material-ui/lab/Pagination";
 import { makeStyles } from "@material-ui/core/styles";
 
 const Account = ({ data }) => {
+  const [loading, setLoading] = useState(false);
+  const handleClick = async () => {
+    setLoading(true);
+    await axios.post(
+      `http://localhost:5001/friends?friendId=${data.id}`,
+      {},
+      {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      }
+    );
+    setLoading(false);
+  };
   return (
     <Box p={5} shadow="md" borderWidth="1px" w="500px">
       <Box d="flex" alignItems="flex-start" flexDirection="column">
-        <Avatar size="sm" name="Kent Dodds" src="https://bit.ly/kent-c-dodds" />
-        <Heading fontSize="xl">{data.email}</Heading>
-        <Text>
-          {data.firstName} {data.lastName}
-        </Text>
+        <HStack>
+          <Avatar
+            size="sm"
+            name="Kent Dodds"
+            src="https://crhscountyline.com/wp-content/uploads/2020/03/Capture.png"
+          />
+          <Heading fontSize="xl">{data.email}</Heading>
+        </HStack>
+        <Box d="flex" w="100%">
+          <Text>
+            {data.firstName} {data.lastName}
+          </Text>
+          <Spacer />
+          <Button
+            onClick={handleClick}
+            isLoading={loading}
+            disabled={data.friend}
+          >
+            Add as Friend
+          </Button>
+        </Box>
       </Box>
     </Box>
   );
@@ -48,6 +80,15 @@ const SearchAccountBody = () => {
   const classes = useStyles();
   const [state, setState] = useState(initState);
 
+  useEffect(() => {
+    setState({ ...state, loading: true });
+    const asyncFunc = async () => {
+      await getAccountsWithPagination(state.search, state.page);
+    };
+    asyncFunc();
+    setState({ ...state, loading: false });
+  }, []);
+
   const getAccountsWithPagination = async (search, page) => {
     const { data } = await axios.get(
       `http://localhost:5001/accounts/search?search=${search}&page=${page}`,
@@ -58,9 +99,26 @@ const SearchAccountBody = () => {
       }
     );
     const { accts, pages } = data;
+    const res = await axios.get(`http://localhost:5001/friends`, {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    });
+    //loop and check if already friend
+    const acctsWFriends = accts.map((acct) => {
+      let result = res.data.filter((friend) => {
+        return friend.id === acct.id;
+      });
+      if (result.length > 0) {
+        acct["friend"] = true;
+      } else {
+        acct["friend"] = false;
+      }
+      return acct;
+    });
     setState({
       ...state,
-      accounts: accts,
+      accounts: acctsWFriends,
       page,
       numPages: pages,
     });
@@ -69,22 +127,12 @@ const SearchAccountBody = () => {
   };
 
   const handlePageChange = async (_, value) => {
-    // await getReviewsFromServer(state.search, value);
     await getAccountsWithPagination(state.search, value);
   };
 
   const handleClick = async (e) => {
     await getAccountsWithPagination(state.search, 1);
   };
-
-  useEffect(() => {
-    setState({ ...state, loading: true });
-    const asyncFunc = async () => {
-      await getAccountsWithPagination(state.search, state.page);
-    };
-    asyncFunc();
-    setState({ ...state, loading: false });
-  }, []);
 
   return (
     <Box h="100%">
@@ -97,7 +145,7 @@ const SearchAccountBody = () => {
           <Button onClick={handleClick}>Search</Button>
         </Stack>
       </Box>
-      <Box h="70%" border="solid" overflowY="scroll">
+      <Box h="70%" overflowY="scroll" w="50%">
         <Stack spacing={8}>
           {state.loading && <Box>Loading...</Box>}
           {state.accounts &&
