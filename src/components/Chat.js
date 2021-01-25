@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Messages from "./Messages.js";
-import {  useDispatch } from "react-redux";
-import { Input, Box } from "@chakra-ui/react";
+import { useDispatch } from "react-redux";
+import { Input, Box, Text } from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
 
 import { addMessage } from "../actions";
@@ -62,7 +62,8 @@ const Chat = () => {
 
   return (
     <Box d="flex" h="100%" flexDirection="column">
-      <Box bg="tomato" h="90%">
+      <Text>Chat</Text>
+      <Box h="90%">
         <Messages roomId={id} />
       </Box>
       <Box h="10%">

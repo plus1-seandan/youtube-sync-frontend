@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Box, VStack, Text } from "@chakra-ui/react";
+import { Box, VStack, Text, Heading } from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
 
 function RoomMembers() {
@@ -30,6 +30,7 @@ function RoomMembers() {
       flexDirection="column"
       alignItems="flex-start"
     >
+      <Text>Room Members</Text>
       <VStack spacing={4}>
         {roomMembers.length > 0 &&
           roomMembers.map((member) => (

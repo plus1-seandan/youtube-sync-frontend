@@ -62,7 +62,7 @@ const VideoPlayer = (props) => {
   };
 
   return (
-    <Box h="100%">
+    <Box h="100%" p="30px">
       {props.video && props.video.videoInfo ? (
         <Box h="100%">
           <Box h="90%">

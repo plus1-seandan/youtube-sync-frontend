@@ -1,5 +1,5 @@
 import axios from "axios";
-import { GridItem, Grid } from "@chakra-ui/react";
+import { GridItem, Grid, Divider } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import VideoList from "./VideoList";
 import VideoSearch from "./VideoSearch";
@@ -41,37 +41,18 @@ function RoomBody({ roomId }) {
       h="100%"
       templateRows="repeat(12, 1fr)"
       templateColumns="repeat(12, 1fr)"
-      border="solid"
     >
       <GridItem rowStart={1} rowEnd={12} colStart={1} colEnd={3}>
         <VideoSearch searchVideos={searchVideos} />
         <VideoList videos={searchedVideos} selectVideo={selectVideo} />
       </GridItem>
-      <GridItem
-        rowStart={1}
-        rowEnd={13}
-        colStart={3}
-        colEnd={11}
-        border="solid"
-      >
+      <GridItem rowStart={1} rowEnd={13} colStart={3} colEnd={11}>
         <VideoPlayer roomId={roomId} />
       </GridItem>
-      <GridItem
-        rowStart={1}
-        rowEnd={8}
-        colStart={11}
-        colEnd={13}
-        border="solid"
-      >
+      <GridItem rowStart={1} rowEnd={8} colStart={11} colEnd={13}>
         <Chat />
       </GridItem>
-      <GridItem
-        rowStart={8}
-        rowEnd={13}
-        colStart={11}
-        colEnd={13}
-        border="solid"
-      >
+      <GridItem rowStart={8} rowEnd={13} colStart={11} colEnd={13} pt="20px">
         <RoomMembers />
       </GridItem>
     </Grid>

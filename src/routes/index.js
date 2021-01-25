@@ -5,6 +5,7 @@ import LoginPage from "./LoginPage";
 import RegisterPage from "./RegisterPage";
 import HomePage from "./HomePage";
 import RoomPage from "./RoomPage";
+import SearchUsers from "./SearchUsers";
 
 const Routes = () => {
   return (
@@ -17,6 +18,7 @@ const Routes = () => {
         <Route path="/register" exact component={RegisterPage} />
         <Route path="/home" exact component={HomePage} />
         <Route path="/room/:id" component={RoomPage} />
+        <Route path="/search" component={SearchUsers} />
       </Switch>
     </BrowserRouter>
   );
