@@ -26,6 +26,29 @@ function RoomMembers() {
   const handleClose = () => {
     setOpenModal(false);
   };
+  const addRoomMember = async (memberId) => {
+    try {
+      const { data } = await axios.post(
+        `http://localhost:5001/rooms/members?memberId=${memberId}&roomId=${id}`,
+        {},
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        }
+      );
+      const formatData = {
+        email: data.email,
+        first_name: data.firstName,
+        last_name: data.lastName,
+      };
+      if (data) {
+        setRoomMembers(roomMembers.concat(formatData));
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
   return (
     <Box
       overflowY="scroll"
@@ -38,14 +61,18 @@ function RoomMembers() {
         isOpen={openModal}
         onClose={handleClose}
         roomId={id}
+        addRoomMember={addRoomMember}
       />
-      <Button
-        onClick={() => {
-          setOpenModal(true);
-        }}
-      >
-        Add Friends to Room
-      </Button>
+      <Box h="20%">
+        <Button
+          onClick={() => {
+            setOpenModal(true);
+          }}
+          h="100%"
+        >
+          Add Friends to Room
+        </Button>
+      </Box>
       <Text>Room Members</Text>
       <VStack spacing={4}>
         {roomMembers.length > 0 &&
@@ -58,6 +85,7 @@ function RoomMembers() {
 }
 
 function Member({ member }) {
+  console.log({ member });
   return (
     <Box p={2} w="200px" shadow="md" borderWidth="1px" borderRadius="md">
       <Text>

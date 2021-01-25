@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Center, Heading } from "@chakra-ui/react";
 import {
   Modal,
@@ -14,33 +14,32 @@ import { IconButton } from "@chakra-ui/react";
 import { CloseIcon } from "@chakra-ui/icons";
 import axios from "axios";
 import { setMyFriends } from "../actions";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Account from "./Account";
 
-function Friend({ friend, roomId }) {
-  const addToRoom = async () => {
-    await axios.post(
-      `http://localhost:5001/rooms/member?memberId=${friend.id}`,
-      {},
-      {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("token"),
-        },
-      }
-    );
-  };
+function Friend({ friend, roomId, addRoomMember }) {
+  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+
   return (
     <Box p={5} w="100%" shadow="md" borderWidth="1px" borderRadius="md">
       <Heading fontSize="m">{friend.email}</Heading>
       <Text>
         {friend.firstName} {friend.lastName}
       </Text>
-      <Button onClick={addToRoom}>Add to Room</Button>
+      <Button
+        isLoading={loading}
+        onClick={() => {
+          addRoomMember(friend.id);
+        }}
+      >
+        Add to Room
+      </Button>
     </Box>
   );
 }
 
-function AddFriendToRoomModal({ isOpen, onClose, roomId }) {
+function AddFriendToRoomModal({ isOpen, onClose, roomId, addRoomMember }) {
   const myFriends = useSelector((state) => state.myFriends);
   return (
     <>
@@ -52,7 +51,11 @@ function AddFriendToRoomModal({ isOpen, onClose, roomId }) {
               <Stack spacing={8}>
                 {myFriends &&
                   myFriends.map((acct) => (
-                    <Friend friend={acct} roomId={roomId} />
+                    <Friend
+                      friend={acct}
+                      roomId={roomId}
+                      addRoomMember={addRoomMember}
+                    />
                   ))}
               </Stack>
             </Box>
@@ -61,9 +64,6 @@ function AddFriendToRoomModal({ isOpen, onClose, roomId }) {
             <IconButton onClick={() => onClose()}>
               <CloseIcon />
             </IconButton>
-            <Button colorScheme="blue" mr={3} ml="20px">
-              New Game
-            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
