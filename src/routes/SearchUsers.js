@@ -15,26 +15,11 @@ const SearchUsers = () => {
       <GridItem rowStart={1} rowEnd={2} colStart={1} colEnd={13}>
         <Header />
       </GridItem>
-      <GridItem
-        rowStart={2}
-        rowEnd={12}
-        colStart={1}
-        colEnd={2}
-        bg="tomato"
-      ></GridItem>
-      <GridItem rowStart={2} rowEnd={12} colStart={2} colEnd={12} bg="#FEFCBF">
+      <GridItem rowStart={2} rowEnd={12} colStart={1} colEnd={2}></GridItem>
+      <GridItem rowStart={2} rowEnd={13} colStart={2} colEnd={12}>
         <SearchAccountBody />
       </GridItem>
-      <GridItem
-        rowStart={2}
-        rowEnd={12}
-        colStart={12}
-        colEnd={13}
-        bg="tomato"
-      ></GridItem>
-      <GridItem rowStart={12} rowEnd={13} colStart={1} colEnd={13} bg="#C6F6D5">
-        Footer
-      </GridItem>
+      <GridItem rowStart={2} rowEnd={12} colStart={12} colEnd={13}></GridItem>
     </Grid>
   );
 };

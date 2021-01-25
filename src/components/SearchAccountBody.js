@@ -8,6 +8,7 @@ import {
   Avatar,
   Center,
   Input,
+  VStack,
   Button,
 } from "@chakra-ui/react";
 import { Rating } from "@material-ui/lab";
@@ -17,21 +18,13 @@ import { makeStyles } from "@material-ui/core/styles";
 
 const Account = ({ data }) => {
   return (
-    <Box p={5} shadow="md" borderWidth="1px">
-      <Box d="flex" alignItems="center">
+    <Box p={5} shadow="md" borderWidth="1px" w="500px">
+      <Box d="flex" alignItems="flex-start" flexDirection="column">
         <Avatar size="sm" name="Kent Dodds" src="https://bit.ly/kent-c-dodds" />
-        <Heading fontSize="xl" ml="20px">
-          {data.firstName} {data.lastName[0]}.
-        </Heading>
-      </Box>
-      <Text mt={4}>{data.comments}</Text>
-      <Box component="fieldset" mt={3} borderColor="transparent">
-        <Rating
-          name="read-only"
-          value={data.rating}
-          readOnly
-          icon={<FavoriteIcon fontSize="inherit" />}
-        />
+        <Heading fontSize="xl">{data.email}</Heading>
+        <Text>
+          {data.firstName} {data.lastName}
+        </Text>
       </Box>
     </Box>
   );
@@ -57,32 +50,31 @@ const SearchAccountBody = () => {
 
   const getAccountsWithPagination = async (search, page) => {
     const { data } = await axios.get(
-      `http://localhost:5001/accounts/search?search=${state.search}&page=${state.page}`,
+      `http://localhost:5001/accounts/search?search=${search}&page=${page}`,
       {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
       }
     );
-    const { accounts, pages } = data;
+    const { accts, pages } = data;
     setState({
       ...state,
-      accounts,
+      accounts: accts,
       page,
       numPages: pages,
     });
 
-    return accounts;
+    return accts;
   };
 
   const handlePageChange = async (_, value) => {
     // await getReviewsFromServer(state.search, value);
+    await getAccountsWithPagination(state.search, value);
   };
-  const getReviews = async () => {
-    // await getReviewsFromServer(state.search, state.page);
-  };
+
   const handleClick = async (e) => {
-    // await getReviewsFromServer(state.search, 1);
+    await getAccountsWithPagination(state.search, 1);
   };
 
   useEffect(() => {
@@ -95,8 +87,8 @@ const SearchAccountBody = () => {
   }, []);
 
   return (
-    <Box>
-      <Box mt="20px" w="200px" mb="30px">
+    <Box h="100%">
+      <Box w="200px">
         <Stack>
           <Input
             placeholder="Search keywords..."
@@ -105,18 +97,20 @@ const SearchAccountBody = () => {
           <Button onClick={handleClick}>Search</Button>
         </Stack>
       </Box>
-      <Stack spacing={8}>
-        {state.loading && <Box>Loading...</Box>}
-        {state.accounts &&
-          state.accounts.map((acct) => <Account data={acct} />)}
-        <Center className={classes.root} mt="50px">
-          <Pagination
-            count={state.numPages}
-            page={state.page}
-            onChange={handlePageChange}
-          />
-        </Center>
-      </Stack>
+      <Box h="70%" border="solid" overflowY="scroll">
+        <Stack spacing={8}>
+          {state.loading && <Box>Loading...</Box>}
+          {state.accounts &&
+            state.accounts.map((acct) => <Account data={acct} />)}
+        </Stack>
+      </Box>
+      <Center className={classes.root} mt="50px">
+        <Pagination
+          count={state.numPages}
+          page={state.page}
+          onChange={handlePageChange}
+        />
+      </Center>
     </Box>
   );
 };
