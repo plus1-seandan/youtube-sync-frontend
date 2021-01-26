@@ -44,6 +44,7 @@ function RoomMembers() {
       };
       if (data) {
         setRoomMembers(roomMembers.concat(formatData));
+        handleClose();
       }
     } catch (e) {
       console.log(e);
