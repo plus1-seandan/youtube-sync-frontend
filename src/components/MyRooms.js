@@ -38,10 +38,12 @@ const MyRooms = () => {
     <Box
       overflowY="scroll"
       h="100%"
+      w="100%"
       d="flex"
       flexDirection="column"
       alignItems="flex-start"
     >
+      <Heading>My Rooms</Heading>
       <Box>
         <Button onClick={openModal}>Create Room</Button>
       </Box>
@@ -62,15 +64,19 @@ function Room({ room }) {
   return (
     <Box
       p={5}
-      w="300px"
       shadow="md"
       borderWidth="1px"
       borderRadius="md"
       d="flex"
-      justifyContent="space-between"
+      w="100%"
+      justifyContent="flex-start"
     >
-      <Heading fontSize="xl">{room.name}</Heading>
-      <Button onClick={goToRoom}>Go!</Button>
+      <VStack>
+        <Heading fontSize="xl">{room.name}</Heading>
+        <Button onClick={goToRoom} alignSelf="flex-start">
+          Go!
+        </Button>
+      </VStack>
     </Box>
   );
 }

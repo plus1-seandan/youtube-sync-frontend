@@ -12,30 +12,56 @@ import { useDispatch } from "react-redux";
 
 function RoomBody({ roomId }) {
   const [searchedVideos, setSearchedVideos] = useState([]);
+  const [video, setVideo] = useState();
+  const [playing, setPlaying] = useState();
+  const [played, setPlayed] = useState();
+
   const dispatch = useDispatch();
 
   useEffect(() => {
+    const asyncFunc = async () => {
+      const { data } = await axios.get(
+        `http://localhost:5001/rooms/id?id=${roomId}`,
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        }
+      );
+      console.log({ data });
+      setVideo(data.video);
+      setPlaying(data.playing);
+      setPlayed(data.played);
+    };
+    asyncFunc();
+
     socket.on("change-video", (payload) => {
-      dispatch(setVideo(payload.roomId, payload.video));
+      setVideo(payload.video);
     });
     return () => {};
   }, []);
 
   const selectVideo = (roomId, video) => {
-    dispatch(setVideo(roomId, video));
+    console.log({ video });
+    setVideo(video);
+    // dispatch(setVideo(roomId, video));
     socket.emit("load-video", {
       roomId: roomId,
       video: video,
     });
   };
-
+  const togglePlay = (bool) => {
+    setPlaying(bool);
+  };
   const searchVideos = async (query) => {
     const response = await axios.get(
       `http://localhost:5001/youtube?query=${query}`
     );
     setSearchedVideos(response.data);
   };
-
+  const handleSeek = (time) => {
+    setPlayed(time);
+  };
   return (
     <Grid
       h="100%"
@@ -47,7 +73,14 @@ function RoomBody({ roomId }) {
         <VideoList videos={searchedVideos} selectVideo={selectVideo} />
       </GridItem>
       <GridItem rowStart={1} rowEnd={13} colStart={3} colEnd={11}>
-        <VideoPlayer roomId={roomId} />
+        <VideoPlayer
+          id={roomId}
+          video={video}
+          playing={playing}
+          played={played}
+          togglePlay={togglePlay}
+          handleSeek={handleSeek}
+        />
       </GridItem>
       <GridItem rowStart={1} rowEnd={8} colStart={11} colEnd={13}>
         <Chat />

@@ -68,33 +68,6 @@ export const startMessage = (roomId) => {
   };
 };
 
-export const initializeVideo = (roomId) => {
-  return {
-    type: "INITIALIZE_VIDEO",
-    payload: { roomId },
-  };
-};
-
-export const setVideo = (roomId, video) => {
-  return {
-    type: "SET_VIDEO",
-    payload: { roomId, video },
-  };
-};
-
-export const togglePlay = (roomId, isPlaying) => {
-  return {
-    type: "TOGGLE_PLAY",
-    payload: { roomId, isPlaying },
-  };
-};
-export const setPlayed = (roomId, played) => {
-  return {
-    type: "SEEK_VIDEO",
-    payload: { roomId, played },
-  };
-};
-
 export const removeFriend = (friend) => {
   return {
     type: "REMOVE_FRIEND",
