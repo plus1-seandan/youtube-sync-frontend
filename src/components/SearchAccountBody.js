@@ -34,7 +34,7 @@ const Account = ({ data }) => {
     setLoading(false);
   };
   return (
-    <Box p={5} shadow="md" borderWidth="1px" w="500px">
+    <Box p={5} shadow="md" borderWidth="1px" w="100%">
       <Box d="flex" alignItems="flex-start" flexDirection="column">
         <HStack>
           <Avatar

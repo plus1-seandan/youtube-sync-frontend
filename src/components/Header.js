@@ -16,6 +16,13 @@ export default function Header() {
   const classes = useStyles();
   const history = useHistory();
 
+  const handleLogout = () => {
+    localStorage.clear();
+    sessionStorage.clear();
+
+    history.push("/login");
+  };
+
   const goToHome = () => {
     history.push("/home");
   };
@@ -27,8 +34,9 @@ export default function Header() {
       </IconButton>
       <Heading>Youtube Sync</Heading>
       <Spacer />
-      <Button>Log Out</Button>
-      <Button>My Profile</Button>
+      <Button onClick={handleLogout} mr="20px">
+        Log Out
+      </Button>
     </Box>
   );
 }

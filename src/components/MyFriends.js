@@ -34,9 +34,12 @@ const MyFriends = () => {
       overflowY="scroll"
       h="100%"
       d="flex"
+      w="100%"
       flexDirection="column"
       alignItems="flex-start"
+      mt="50px"
     >
+      <Heading>My Friends</Heading>
       <Button onClick={handleSearchUsers}>Search Users</Button>
       <VStack spacing={4}>
         {myFriends.length > 0 &&
