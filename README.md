@@ -4,7 +4,7 @@
 
 Frontend for the Youtube Sync website.
 
-Note: This is in combination with the backend project ([repo](https://github.com/seanysdan/honey-donuts-backend)).
+Note: This is in combination with the backend project ([repo](https://github.com/seanysdan/youtube-sync-backend)).
 
 ![](youtubesyncgif.gif)
 
@@ -20,8 +20,8 @@ Surge<br/>
 
 ## Install
 
-    $ git clone https://github.com/seanysdan/honey-donuts-frontend-public.git
-    $ cd honey-donuts-frontend-public
+    $ git clone https://github.com/seanysdan/youtube-sync-frontend.git
+    $ cd youtube-sync-frontend
     $ yarn install
 
 ## Running the project
