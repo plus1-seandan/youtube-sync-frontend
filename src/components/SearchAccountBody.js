@@ -23,7 +23,7 @@ const Account = ({ data }) => {
   const handleClick = async () => {
     setLoading(true);
     await axios.post(
-      `http://localhost:5001/friends?friendId=${data.id}`,
+      `http://${process.env.REACT_APP_SERVER_URL}:5001/friends?friendId=${data.id}`,
       {},
       {
         headers: {
@@ -91,7 +91,7 @@ const SearchAccountBody = () => {
 
   const getAccountsWithPagination = async (search, page) => {
     const { data } = await axios.get(
-      `http://localhost:5001/accounts/search?search=${search}&page=${page}`,
+      `http://${process.env.REACT_APP_SERVER_URL}:5001/accounts/search?search=${search}&page=${page}`,
       {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
@@ -99,11 +99,14 @@ const SearchAccountBody = () => {
       }
     );
     const { accts, pages } = data;
-    const res = await axios.get(`http://localhost:5001/friends`, {
-      headers: {
-        Authorization: "Bearer " + localStorage.getItem("token"),
-      },
-    });
+    const res = await axios.get(
+      `http://${process.env.REACT_APP_SERVER_URL}:5001/friends`,
+      {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      }
+    );
     //loop and check if already friend
     const acctsWFriends = accts.map((acct) => {
       let result = res.data.filter((friend) => {

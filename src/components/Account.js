@@ -19,7 +19,7 @@ const Account = ({ data }) => {
   const handleClick = async () => {
     setLoading(true);
     await axios.post(
-      `http://localhost:5001/friends?friendId=${data.id}`,
+      `http://${process.env.REACT_APP_SERVER_URL}:5001/friends?friendId=${data.id}`,
       {},
       {
         headers: {

@@ -11,7 +11,7 @@ function RoomMembers() {
   useEffect(() => {
     const asyncFunc = async () => {
       const roomMembers = await axios.get(
-        `http://localhost:5001/rooms/members?id=${id}`,
+        `http://${process.env.REACT_APP_SERVER_URL}:5001/rooms/members?id=${id}`,
         {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
@@ -29,7 +29,7 @@ function RoomMembers() {
   const addRoomMember = async (memberId) => {
     try {
       const { data } = await axios.post(
-        `http://localhost:5001/rooms/members?memberId=${memberId}&roomId=${id}`,
+        `http://${process.env.REACT_APP_SERVER_URL}:5001/rooms/members?memberId=${memberId}&roomId=${id}`,
         {},
         {
           headers: {

@@ -14,11 +14,14 @@ const MyRooms = () => {
 
   useEffect(() => {
     const asyncFunc = async () => {
-      const response = await axios.get(`http://localhost:5001/rooms`, {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("token"),
-        },
-      });
+      const response = await axios.get(
+        `http://${process.env.REACT_APP_SERVER_URL}:5001/rooms`,
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        }
+      );
       dispatch(setMyRooms(response.data));
     };
     asyncFunc();

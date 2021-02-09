@@ -1,7 +1,8 @@
-const server = process.env.REACT_APP_API_SERVER || "http://localhost:5001";
+import dotenv from "dotenv";
 
+const server = process.env.REACT_APP_SERVER_URL;
 export const login = (email, password) => {
-  return fetch(`${server}/login`, {
+  return fetch(`http://${server}:5001/login`, {
     method: "POST",
     body: JSON.stringify({
       email,

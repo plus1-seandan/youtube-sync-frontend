@@ -9,6 +9,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
+import dotenv from "dotenv";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -43,7 +44,10 @@ const RegisterPage = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    await axios.post("http://localhost:5001/register", account);
+    await axios.post(
+      `http://${process.env.REACT_APP_SERVER_URL}:5001/register`,
+      account
+    );
     setTimeout(() => {
       history.push("/login");
     }, 1500);
