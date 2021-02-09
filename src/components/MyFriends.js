@@ -13,11 +13,14 @@ const MyFriends = () => {
 
   useEffect(() => {
     const asyncFunc = async () => {
-      const { data } = await axios.get(`http://localhost:5001/friends`, {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("token"),
-        },
-      });
+      const { data } = await axios.get(
+        `http://${process.env.REACT_APP_SERVER_URL}:5001/friends`,
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        }
+      );
       dispatch(setMyFriends(data));
     };
     asyncFunc();

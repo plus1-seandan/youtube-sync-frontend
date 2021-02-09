@@ -18,11 +18,14 @@ const PublicRooms = () => {
 
   useEffect(() => {
     async function asyncFunc() {
-      const { data } = await axios.get(`http://localhost:5001/rooms/public`, {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("token"),
-        },
-      });
+      const { data } = await axios.get(
+        `http://${process.env.REACT_APP_SERVER_URL}:5001/rooms/public`,
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        }
+      );
       setRooms(data);
     }
     asyncFunc();
@@ -55,7 +58,7 @@ const Room = ({ room }) => {
   const addRoomMember = async (memberId) => {
     try {
       return await axios.post(
-        `http://localhost:5001/rooms/members?memberId=${memberId}&roomId=${room.id}`,
+        `http://${process.env.REACT_APP_SERVER_URL}:5001/rooms/members?memberId=${memberId}&roomId=${room.id}`,
         {},
         {
           headers: {

@@ -26,7 +26,7 @@ function NewRoomModal({ isOpen, handleClose }) {
     e.preventDefault();
     const { data: room } = await axios({
       method: "post",
-      url: `http://localhost:5001/rooms`,
+      url: `http://${process.env.REACT_APP_SERVER_URL}:5001/rooms`,
       headers: {
         Authorization: "Bearer " + localStorage.getItem("token"),
       },

@@ -21,7 +21,7 @@ function RoomBody({ roomId }) {
   useEffect(() => {
     const asyncFunc = async () => {
       const { data } = await axios.get(
-        `http://localhost:5001/rooms/id?id=${roomId}`,
+        `http://${process.env.REACT_APP_SERVER_URL}:5001/rooms/id?id=${roomId}`,
         {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
@@ -55,7 +55,7 @@ function RoomBody({ roomId }) {
   };
   const searchVideos = async (query) => {
     const response = await axios.get(
-      `http://localhost:5001/youtube?query=${query}`
+      `http://${process.env.REACT_APP_SERVER_URL}:5001/youtube?query=${query}`
     );
     setSearchedVideos(response.data);
   };
